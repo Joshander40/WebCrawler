@@ -1,6 +1,9 @@
 from urllib.request import urlopen
 from linkSearch import LinkSearcher
 from functions import *
+import requests
+import lxml 
+from bs4 import BeautifulSoup
 
 class Spider:
     ## Shared variables for the spider fleet
@@ -38,19 +41,31 @@ class Spider:
             Spider.crawled.add(URL)
             Spider.updateFiles()
 
+    # def getLinks(URL):
+    #     htmlValue = ""
+    #     try:
+    #         value = urlopen(URL)
+    #         if value.getHeader("Content-Type") == "text/html":
+    #             bytes = value.read()
+    #             htmlString = bytes.decode("utf-8")
+    #         searcher = LinkSearcher(Spider.startingUrl, URL)
+    #         searcher.feed(htmlString)
+    #     except:
+    #         print("Error page can't be crawled "+ URL)
+    #         return set()
+    #     return searcher.gatheredLinks()
+    
+    
+    # gets all urls on webpage
     def getLinks(URL):
-        htmlValue = ""
-        try:
-            value = urlopen(URL)
-            if value.getHeader("Content-Type") == "text/html":
-                bytes = value.read()
-                htmlString = bytes.decode("utf-8")
-            searcher = LinkSearcher(Spider.startingUrl, URL)
-            searcher.feed(htmlString)
-        except:
-            print("Error page can't be crawled")
-            return set()
-        return searcher.gatheredLinks()
+        page = requests.get(URL)
+
+        soup = BeautifulSoup(page.content,'lxml')
+        
+        urls = []
+        for link in soup.find_all('a'):
+            return link.get('href')
+        
 
     def addToQueue(URLs):
         for url in URLs:
