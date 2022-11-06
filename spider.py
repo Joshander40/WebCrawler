@@ -20,12 +20,14 @@ class Spider:
         self.boot()
         self.crawl("Spider 1", Spider.startingUrl)
 
+    @staticmethod
     def boot():
         createDirectory(Spider.name)
         createFiles(Spider.name, Spider.startingUrl)
         Spider.queue = fileIntoSet(Spider.qFile)
         Spider.crawled = fileIntoSet(Spider.cFile)
 
+    @staticmethod
     def crawl(thread, URL):
         if URL not in Spider.crawled:
             print(thread + " current crawling " + URL)
@@ -60,7 +62,7 @@ class Spider:
                 continue
             Spider.queue.add(url)
 
-    def updateFile():
+    def updateFiles():
         setIntoFile(Spider.queue, Spider.qFile)
         setIntoFile(Spider.crawled, Spider.cFile)
             

@@ -4,8 +4,8 @@ from spider import Spider
 from domain import *
 from functions import *
 
-NAME = "nfl"
-HOME_PAGE = "https://www.nfl.com/"
+NAME = "sbnation"
+HOME_PAGE = "https://www.sbnation.com/college-football/"
 DOMAIN_NAME = getDomainName(HOME_PAGE)
 QUEUE_FILE = NAME + "/queue.txt"
 CRAWLED_FILE = NAME + "/crawled.txt"
