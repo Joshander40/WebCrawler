@@ -64,16 +64,15 @@ class Spider:
         
         urls = []
         for link in soup.find_all('a'):
-            return link.get('href')
-        
+            urls.append(Spider.startingUrl)
+            urls.append(link.get('href'))
+        return urls
 
     def addToQueue(URLs):
         for url in URLs:
             if url in Spider.queue:
                 continue
             if url in Spider.crawled:
-                continue
-            if Spider.domainName not in url:
                 continue
             Spider.queue.add(url)
 
