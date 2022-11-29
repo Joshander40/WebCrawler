@@ -20,7 +20,7 @@ def create_dict():
     write_json(dictionary)
     
 def add_contained_urls(parent_url,sub_urls):
-    print(len(sub_urls))
+    # print(len(sub_urls))
     parent_dict = {}
     with open('database.JSON','r') as json_file_r:
         url_dict = {parent_url: {'contained_urls' : []}}
@@ -30,11 +30,11 @@ def add_contained_urls(parent_url,sub_urls):
         for index in range(len(parent_dict['URL'])):
             # print(parent_dict['URL'][index])
             if(parent_dict['URL'][index] == url_dict):
-                print("Hello World")
+                # print("Hello World")
                 for url in sub_urls:
                     parent_dict['URL'][index][parent_url]['contained_urls'].append(url)
-                    print(parent_dict['URL'][index][parent_url]['contained_urls'])
-                    print(parent_dict)
+                    # print(parent_dict['URL'][index][parent_url]['contained_urls'])
+                    # print(parent_dict)
                 json.dump(parent_dict,append_json,indent=4)
         
 
@@ -45,5 +45,5 @@ def write_json(table_dict):
 
 
 create_dict()
-sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
-add_contained_urls("http://www.postingandtoasting.com/\n",sub_urls)
+# sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
+# add_contained_urls("http://www.postingandtoasting.com/\n",sub_urls)
