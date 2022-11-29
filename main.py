@@ -4,7 +4,7 @@ from spider import Spider
 from domain import *
 from functions import *
 from database import create_dict,add_contained_urls
-from gui import init_crawl
+from gui import gui
 import json
 import PySimpleGUI as GUI
 
@@ -28,12 +28,17 @@ with open('database.JSON','r') as file:
     dictionary = json.load(file)
     # for index in range(len(dictionary['URL'])):
     url_list = list(dictionary['URL'])
+    # print(url_list)
     for url_dict in url_list:
-        for url in range(10):
+        
+        for url in url_dict:
+            print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
             queue_array = []
             queue_array.append(url)
             table_array.append(queue_array)
+
+# print(table_array)
 
 
 layout_url = [

@@ -91,5 +91,3 @@ def gui():
     window.close()
 
 # def write_json(arr):
-
-gui()
