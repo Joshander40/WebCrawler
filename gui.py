@@ -3,7 +3,7 @@ import json
 
 table_array = []
 
-def init_crawl():
+def gui():
 
     headings = ["url"]
 
@@ -33,7 +33,6 @@ def init_crawl():
         dictionary = json.load(file)
         # for index in range(len(dictionary['URL'])):
         url_list = list(dictionary['URL'])
-        new_url_list = []
         for url_dict in url_list:
             for url in url_dict:
                 # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
@@ -93,4 +92,4 @@ def init_crawl():
 
 # def write_json(arr):
 
-init_crawl()
+gui()
