@@ -37,6 +37,10 @@ with open('database.JSON','r') as file:
             queue_array = []
             queue_array.append(url)
             table_array.append(queue_array)
+            # Populate array for second column with ranked URLs
+            # 1. User to click one of the initial links and click crawl
+            # 2. Crawl selected page for roughly 20 URLs
+            # 3. Grab all data from each page and search each one for the keyword
 
 # print(table_array)
 
@@ -51,6 +55,7 @@ layout_url = [
     display_row_numbers=True,
     justification='left',
     num_rows=10,
+    enable_events = True,
     key="-TABLE-",
     row_height=35
     )]
@@ -66,6 +71,7 @@ layout_picked_url = [
         justification='left',
         num_rows=10,
         key="-PTABLE-",
+        enable_events = True,
         row_height=35
         )]
 ]
@@ -93,14 +99,15 @@ while True:
     if event == "-START-":
         # Initial first 10 database display
         break;
-    if event =="-SEARCH-":
-        print(table_array[values['-TABLE-']])
+    if event =="-TABLE-":
+        print(values[event][0])
         # Pass in a new URL for crawling and overwrite the file
-
-        # # new name. Probably the url
-        # NAME = values.read()
-        # # New url here
-        # HOME_PAGE = "https://www.sbnation.com/college-football/"
+        index = values[event][0]
+        print(table_array[index][0])
+        # new name. Probably the url
+        # NAME = values.read()         
+        # New url here
+        # HOME_PAGE = "https://www.sbnation.com/college-football/"    # this will be the user's selected URL
         # DOMAIN_NAME = getDomainName(HOME_PAGE)
         # # I think we should overwrite this file
         # QUEUE_FILE = NAME + "/queue.txt"
@@ -109,6 +116,15 @@ while True:
         # NUM_OF_THREADS = 8
         # queue = Queue()
         # Spider(NAME, HOME_PAGE, DOMAIN_NAME)
+
+
+        # Pass this index to spider, new searched URL
+        # based on results of crawl, make new file with URLs
+        # Tell eric to add to database
+        # Pass URLs into second column gui from database
+
+        # Future: Check if selected url has contained urls in database -Eric
+        
 
         # Update database function
         break;

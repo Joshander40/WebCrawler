@@ -38,8 +38,11 @@ def gui():
                 # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
                 queue_array = []
                 queue_array.append(url)
-                table_array.append(queue_array)
-
+                table_array.append(queue_array)  # Initial list in column 1
+        # Populate array for second column with ranked URLs
+            # 1. User to click one of the initial links and click crawl
+            # 2. Crawl selected page for roughly 20 URLs
+            # 3. Grab all data from each page and search each one for the keyword
 
 
     layout_url = [
@@ -53,6 +56,7 @@ def gui():
         justification='left',
         num_rows=10,
         key="-TABLE-",
+        enable_events = True,
         row_height=35
         )]
     ]
@@ -67,6 +71,7 @@ def gui():
             justification='left',
             num_rows=10,
             key="-TABLE-",
+            enable_events = True,
             row_height=35
             )]
     ]
