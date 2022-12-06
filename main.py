@@ -105,20 +105,20 @@ while True:
         index = values[event][0]                                      # setting index from values table 
         print(table_array[index][0])                                  # Printing link from specified index of column 1
         # new name. Probably the url
-        NAME = index                                                  # values.read()  - not totally sure if an int is ok here? 
+        NAME = "selected_page"                                        # values.read()  - not totally sure if an int is ok here? 
         # NAME = values.read()                                        # AttributeError: 'dict' object has no attribute 'read'
-        print(NAME)
+        
         # New url here
         HOME_PAGE = table_array[index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
         DOMAIN_NAME = getDomainName(HOME_PAGE)          # Get domain name from selected URL
         # print(DOMAIN_NAME)
         # I think we should overwrite this file
-        # QUEUE_FILE = NAME + "/queue.txt"
-        # # This too? Not sure how this works
-        # CRAWLED_FILE = NAME + "/crawled.txt"
-        # # NUM_OF_THREADS = 8
-        # queue = Queue()
-        # Spider(NAME, HOME_PAGE, DOMAIN_NAME)
+        QUEUE_FILE = NAME + "/queue.txt"
+        # This too? Not sure how this works
+        CRAWLED_FILE = NAME + "/crawled.txt"
+        # NUM_OF_THREADS = 8
+        queue = Queue()
+        Spider(NAME, HOME_PAGE, DOMAIN_NAME)
 
 
         # Pass this index to spider, new searched URL
