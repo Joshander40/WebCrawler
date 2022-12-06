@@ -3,7 +3,7 @@ from queue import Queue
 from spider import Spider
 from domain import *
 from functions import *
-from database import create_dict,add_contained_urls
+from database import create_dict,add_contained_urls,read_file
 from gui import gui
 import json
 import PySimpleGUI as GUI
@@ -124,6 +124,7 @@ while True:
         # Pass this index to spider, new searched URL
         # based on results of crawl, make new file with URLs
         # Tell eric to add to database
+        add_contained_urls(index,read_file())
         # Pass URLs into second column gui from database
 
         # Future: Check if selected url has contained urls in database -Eric
