@@ -22,6 +22,7 @@ import PySimpleGUI as GUI
 headings = ["URL"]
 
 table_array = []
+c2table_array = []
 with open('database.JSON','r') as file:
     queue_array = []
     dictionary = {}
@@ -37,10 +38,14 @@ with open('database.JSON','r') as file:
             queue_array = []
             queue_array.append(url)
             table_array.append(queue_array)
+            # print(table_array)
             # Populate array for second column with ranked URLs
             # 1. User to click one of the initial links and click crawl
             # 2. Crawl selected page for roughly 20 URLs
             # 3. Grab all data from each page and search each one for the keyword
+
+    # Second Column using dictionary['contained_urls']
+    # Does this need to be in the event tag? I think that makes if different every time the user chooses
 
 # print(table_array)
 
@@ -63,7 +68,7 @@ layout_url = [
 
 layout_picked_url = [
     [GUI.Table(
-        values="",
+        values=c2table_array,
         headings=headings,
         max_col_width=50,
         auto_size_columns=True,
@@ -120,10 +125,30 @@ while True:
         Spider(NAME, HOME_PAGE, DOMAIN_NAME)
 
 
+        add_contained_urls(table_array[index][0],read_selected())
+
+        # create table to read all values from contained urls
+        
+        with open('database.JSON','r') as file:
+            c2queue_array = []
+            c2column_links = []
+            c2dictionary = {}
+            c2dictionary = json.load(file)
+            # for index in range(len(dictionary['URL'])):
+            c2column_links = (c2dictionary['URL'][index][table_array[index][0]]['contained_urls'])
+
+            for url in c2column_links:
+                # print(url)
+                # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
+                c2queue_array = []
+                c2queue_array.append(url)
+                c2table_array.append(c2queue_array)
+        print(c2table_array)
+
         # Pass this index to spider, new searched URL
         # based on results of crawl, make new file with URLs
         # Tell eric to add to database
-        add_contained_urls(table_array[index][0],read_selected())
+        
         # Pass URLs into second column gui from database
  
         # Future: Check if selected url has contained urls in database -Eric
