@@ -3,7 +3,7 @@ from queue import Queue
 from spider import Spider
 from domain import *
 from functions import *
-from database import create_dict,add_contained_urls,read_file
+from database import create_dict,add_contained_urls,read_selected
 from gui import gui
 import json
 import PySimpleGUI as GUI
@@ -32,7 +32,7 @@ with open('database.JSON','r') as file:
     for url_dict in url_list:
         
         for url in url_dict:
-            print(url)
+            # print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
             queue_array = []
             queue_array.append(url)
@@ -100,10 +100,10 @@ while True:
         # Initial first 10 database display
         break;
     if event =="-TABLE-":
-        print(values[event][0])                                       # Printing index of column 1 link
+        # print("print 1: ",values[event][0])                                       # Printing index of column 1 link
         # Pass in a new URL for crawling and overwrite the file
         index = values[event][0]                                      # setting index from values table 
-        print(table_array[index][0])                                  # Printing link from specified index of column 1
+        # print("Print 2",table_array[index][0])                                  # Printing link from specified index of column 1
         # new name. Probably the url
         NAME = "selected_page"                                        # values.read()  - not totally sure if an int is ok here? 
         # NAME = values.read()                                        # AttributeError: 'dict' object has no attribute 'read'
@@ -114,8 +114,7 @@ while True:
         # print(DOMAIN_NAME)
         # I think we should overwrite this file
         QUEUE_FILE = NAME + "/queue.txt"
-        # This too? Not sure how this works
-        CRAWLED_FILE = NAME + "/crawled.txt"
+
         # NUM_OF_THREADS = 8
         queue = Queue()
         Spider(NAME, HOME_PAGE, DOMAIN_NAME)
@@ -124,9 +123,9 @@ while True:
         # Pass this index to spider, new searched URL
         # based on results of crawl, make new file with URLs
         # Tell eric to add to database
-        add_contained_urls(index,read_file())
+        add_contained_urls(table_array[index][0],read_selected())
         # Pass URLs into second column gui from database
-
+ 
         # Future: Check if selected url has contained urls in database -Eric
         
 
@@ -135,9 +134,6 @@ while True:
 
 window.close()
 
-
-
-create_dict()
 
 
 
