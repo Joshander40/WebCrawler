@@ -2,7 +2,7 @@ from urllib.request import urlopen
 from linkSearch import LinkSearcher
 from functions import *
 import requests
-import lxml 
+# import lxml 
 from bs4 import BeautifulSoup
 
 class Spider:
@@ -17,7 +17,7 @@ class Spider:
     def __init__(self, name, startingUrl, domainName):
         Spider.name = name
         Spider.qFile = Spider.name + "/queue.txt"
-        Spider.cFile = Spider.name + "/crawled.txt"
+        # Spider.cFile = Spider.name + "/crawled.txt"
         Spider.startingUrl = startingUrl
         Spider.domainName = domainName
         self.boot()
@@ -28,17 +28,17 @@ class Spider:
         createDirectory(Spider.name)
         createFiles(Spider.name, Spider.startingUrl)
         Spider.queue = fileIntoSet(Spider.qFile)
-        Spider.crawled = fileIntoSet(Spider.cFile)
+        # Spider.crawled = fileIntoSet(Spider.cFile)
 
     @staticmethod
     def crawl(thread, URL):
-        if URL not in Spider.crawled:
+        # if URL not in Spider.crawled:
             print(thread + " current crawling " + URL)
             print("Queue " + str(len(Spider.queue)))
-            print("Crawled " + str(len(Spider.crawled)))
+            # print("Crawled " + str(len(Spider.crawled)))
             Spider.addToQueue(Spider.getLinks(URL))
             Spider.queue.remove(URL)
-            Spider.crawled.add(URL)
+            # Spider.crawled.add(URL)
             Spider.updateFiles()
 
     # def getLinks(URL):
@@ -64,22 +64,21 @@ class Spider:
         
         urls = []
         for link in soup.find_all('a'):
-            return link.get('href')
-        
+            urls.append(Spider.startingUrl)
+            urls.append(link.get('href'))
+        return urls
 
     def addToQueue(URLs):
         for url in URLs:
             if url in Spider.queue:
                 continue
-            if url in Spider.crawled:
-                continue
-            if Spider.domainName not in url:
-                continue
+            # if url in Spider.crawled:
+            #     continue
             Spider.queue.add(url)
 
     def updateFiles():
         setIntoFile(Spider.queue, Spider.qFile)
-        setIntoFile(Spider.crawled, Spider.cFile)
+        # setIntoFile(Spider.crawled, Spider.cFile)
             
 
 

@@ -49,7 +49,9 @@ def fileIntoSet(name):
 ## Convert set to file
 def setIntoFile(URLS, file):
     deleteFileData(file)
-    for URL in sorted(URLS):
-        addToFile(file, URL)
+    print("========================================================================================================================\n")
+    for URL in URLS:
+        if URL is not None:
+            addToFile(file, URL)
 
 
