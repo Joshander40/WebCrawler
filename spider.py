@@ -67,6 +67,14 @@ class Spider:
             urls.append(Spider.startingUrl)
             urls.append(link.get('href'))
         return urls
+    
+    def getWords(URL,searchKey):
+        page = requests.get(URL)
+        soup = BeautifulSoup(page.content,'lxml')
+        words = str(soup.get_text(strip=True))
+        words = words.lower()
+        words.count(searchKey)
+
 
     def addToQueue(URLs):
         for url in URLs:

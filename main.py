@@ -7,6 +7,7 @@ from database import create_dict,add_contained_urls,read_selected
 from gui import gui
 import json
 import PySimpleGUI as GUI
+import resultsList
 
 # Start gui <<<<<<<<<<<<<<<< I have a feeling we are going to want to run the gui in here and call different layout from the file?
 # ~"Create" database
@@ -22,6 +23,7 @@ import PySimpleGUI as GUI
 headings = ["URL"]
 
 table_array = []
+c2table_array = []
 with open('database.JSON','r') as file:
     queue_array = []
     dictionary = {}
@@ -37,10 +39,14 @@ with open('database.JSON','r') as file:
             queue_array = []
             queue_array.append(url)
             table_array.append(queue_array)
+            # print(table_array)
             # Populate array for second column with ranked URLs
             # 1. User to click one of the initial links and click crawl
             # 2. Crawl selected page for roughly 20 URLs
             # 3. Grab all data from each page and search each one for the keyword
+
+    # Second Column using dictionary['contained_urls']
+    # Does this need to be in the event tag? I think that makes if different every time the user chooses
 
 # print(table_array)
 
@@ -63,7 +69,7 @@ layout_url = [
 
 layout_picked_url = [
     [GUI.Table(
-        values="",
+        values=c2table_array,
         headings=headings,
         max_col_width=50,
         auto_size_columns=True,
@@ -92,22 +98,18 @@ while True:
     # Initial window is a start button
     event, values = window.read()
     
+    
     # This is the Exit button/window close event
     if event == "EXIT" or event == GUI.WIN_CLOSED:
         break
     # This event will do the initial crawl
-    if event == "-START-":
-        # Initial first 10 database display
-        break;
     if event =="-TABLE-":
-        # print("print 1: ",values[event][0])                                       # Printing index of column 1 link
+        # print("print 1: ",values[event][0])                                     # Printing index of column 1 link
         # Pass in a new URL for crawling and overwrite the file
-        index = values[event][0]                                      # setting index from values table 
+        index = values[event][0]                                                  # setting index from values table 
         # print("Print 2",table_array[index][0])                                  # Printing link from specified index of column 1
         # new name. Probably the url
-        NAME = "selected_page"                                        # values.read()  - not totally sure if an int is ok here? 
-        # NAME = values.read()                                        # AttributeError: 'dict' object has no attribute 'read'
-        
+        NAME = "selected_page"                          # Name of new directory
         # New url here
         HOME_PAGE = table_array[index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
         DOMAIN_NAME = getDomainName(HOME_PAGE)          # Get domain name from selected URL
@@ -117,14 +119,34 @@ while True:
 
         # NUM_OF_THREADS = 8
         queue = Queue()
-        Spider(NAME, HOME_PAGE, DOMAIN_NAME)
+        Spider(NAME, HOME_PAGE, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
+        add_contained_urls(table_array[index][0],read_selected())   # Add new links to array at index of clicked link
 
-        # Pass this index to spider, new searched URL
-        # based on results of crawl, make new file with URLs
-        # Tell eric to add to database
-        add_contained_urls(table_array[index][0],read_selected())
+        # create table to read all values from contained urls
+        
+        with open('database.JSON','r') as file:
+            c2queue_array = []
+            c2column_links = []
+            c2dictionary = {}
+            c2dictionary = json.load(file)
+            # for index in range(len(dictionary['URL'])):
+            c2column_links = (c2dictionary['URL'][index][table_array[index][0]]['contained_urls']) #index of each contained_urls position in database.JSON
+
+            #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
+            for url in c2column_links:
+                # print(url)
+                # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
+                c2queue_array = []
+                c2queue_array.append(url)
+                c2table_array.append(c2queue_array)
+        
+                print(c2table_array)
+
         # Pass URLs into second column gui from database
+        #window["-PTABLE-"].update(c2table_array)
+        #c2table_array = []
+            resultsList.create(c2table_array, headings)
  
         # Future: Check if selected url has contained urls in database -Eric
         

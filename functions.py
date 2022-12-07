@@ -28,6 +28,7 @@ createFiles("Starting Page", "https://en.wikipedia.org/wiki/American_football/")
 
 ## Add information to existing file
 
+# (path,data,rank?)
 def addToFile(path, data):
     with open(path, "a") as file:
         file.write(data + "\n")
@@ -49,9 +50,10 @@ def fileIntoSet(name):
 ## Convert set to file
 def setIntoFile(URLS, file):
     deleteFileData(file)
-    print("========================================================================================================================\n")
+    # print("========================================================================================================================\n")
     for URL in URLS:
         if URL is not None:
+            # (path,data,rank?)
             addToFile(file, URL)
 
 
