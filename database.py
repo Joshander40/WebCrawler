@@ -66,6 +66,20 @@ def create_rank_database():
         dictionary['URL'].append({elem[0:-2] : rank_array})
     write_json(dictionary,'rank_database.JSON')
 
+def add_rank(parent_url,keyword,rank):
+    print("parent url ",parent_url)
+    parent_dict = {}
+    rank = {keyword:rank}
+    with open('rank_database.JSON','r') as json_file_r:
+        parent_dict = json.load(json_file_r)
+        url_dict = {parent_url: {'Keyword' : []}}
+    with open('rank_database.JSON','w') as append_json:
+        for index in range(len(parent_dict['URL'])):
+            if(parent_dict['URL'][index] == url_dict):
+                parent_dict['URL'][index][parent_url]['Keyword'].append(rank)
+
+                json.dump(parent_dict,append_json,indent=4)
+        
 
 def write_json(table_dict,file):
     with open(file,'w') as json_file:
