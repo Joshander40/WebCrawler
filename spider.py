@@ -16,8 +16,9 @@ class Spider:
     crawled = set()
     def __init__(self, name, startingUrl, domainName):
         Spider.name = name
+        Spider.startingUrl = startingUrl
         Spider.qFile = Spider.name + "/queue.txt"
-        # Spider.cFile = Spider.name + "/crawled.txt"
+        Spider.cFile = Spider.name + "/crawled.txt"
         Spider.startingUrl = startingUrl
         Spider.domainName = domainName
         self.boot()
@@ -28,17 +29,21 @@ class Spider:
         createDirectory(Spider.name)
         createFiles(Spider.name, Spider.startingUrl)
         Spider.queue = fileIntoSet(Spider.qFile)
-        # Spider.crawled = fileIntoSet(Spider.cFile)
+        Spider.crawled = fileIntoSet(Spider.cFile)
+
 
     @staticmethod
-    def crawl(thread, URL):
-        # if URL not in Spider.crawled:
-            print(thread + " current crawling " + URL)
+    def crawl(currentThread, URL):
+        if URL not in Spider.crawled:
+            if (URL == "#context"):
+                Spider.queue.remove(URL)
+                return
+            print(currentThread + " current crawling " + URL) #Displays the page being crawled
             print("Queue " + str(len(Spider.queue)))
-            # print("Crawled " + str(len(Spider.crawled)))
+            print("Crawled " + str(len(Spider.crawled)))
             Spider.addToQueue(Spider.getLinks(URL))
             Spider.queue.remove(URL)
-            # Spider.crawled.add(URL)
+            Spider.crawled.add(URL)
             Spider.updateFiles()
 
     # def getLinks(URL):
@@ -58,27 +63,45 @@ class Spider:
     
     # gets all urls on webpage
     def getLinks(URL):
-        page = requests.get(URL)
-
-        soup = BeautifulSoup(page.content,'lxml')
-        
-        urls = []
-        for link in soup.find_all('a'):
-            urls.append(Spider.startingUrl)
-            urls.append(link.get('href'))
-        return urls
+        try:
+            page = requests.get(URL)
+            #print("1")
+            soup = BeautifulSoup(page.content,'lxml')
+            #print("2")
+            urls = []
+            #print("3")
+            i = 0
+            #print("4")
+            for link in soup.find_all('a'):
+                #print("5")
+                
+                #print("6")
+                i += 1
+                #print("7")
+                #print("\n found link: " + link)
+                #print("8")
+                urls.append(Spider.startingUrl)
+                #print("9")
+                urls.append(link.get('href'))
+            return urls
+        except:
+             print("Error page can't be crawled "+ URL)
+             return set()
 
     def addToQueue(URLs):
         for url in URLs:
+            print("URL \n" + url + "URL\n")
             if url in Spider.queue:
                 continue
-            # if url in Spider.crawled:
-            #     continue
+            if url in Spider.crawled:
+                continue
+            #if Spider.name not in url:
+            #    continue
             Spider.queue.add(url)
 
     def updateFiles():
         setIntoFile(Spider.queue, Spider.qFile)
-        # setIntoFile(Spider.crawled, Spider.cFile)
+        setIntoFile(Spider.crawled, Spider.cFile)
             
 
 

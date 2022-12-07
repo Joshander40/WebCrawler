@@ -20,145 +20,52 @@ import resultsList
 
 
 # this needs to be url and rank
-headings = ["URL"]
-
-table_array = []
-c2table_array = []
-with open('database.JSON','r') as file:
-    queue_array = []
-    dictionary = {}
-    dictionary = json.load(file)
-    # for index in range(len(dictionary['URL'])):
-    url_list = list(dictionary['URL'])
-    # print(url_list)
-    for url_dict in url_list:
-        
-        for url in url_dict:
-            # print(url)
-            # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
-            queue_array = []
-            queue_array.append(url)
-            table_array.append(queue_array)
-            # print(table_array)
-            # Populate array for second column with ranked URLs
-            # 1. User to click one of the initial links and click crawl
-            # 2. Crawl selected page for roughly 20 URLs
-            # 3. Grab all data from each page and search each one for the keyword
-
-    # Second Column using dictionary['contained_urls']
-    # Does this need to be in the event tag? I think that makes if different every time the user chooses
-
-# print(table_array)
+PROJECT_NAME = 'sbnation'
+HOMEPAGE = 'https://sbnation.com/college-football/'
+DOMAIN_NAME = getDomainName(HOMEPAGE)
+QUEUE_FILE = PROJECT_NAME + '/queue.txt'
+CRAWLED_FILE = PROJECT_NAME + '/crawled.txt'
+NUMBER_OF_THREADS = 8
+queue = Queue()
+Spider(PROJECT_NAME, HOMEPAGE, DOMAIN_NAME)
 
 
-layout_url = [
+# Create worker threads (will die when main exits)
+def create_workers():
+    for _ in range(NUMBER_OF_THREADS):
+        t = threading.Thread(target = work)
+        t.daemon = True
+        t.start()
 
-    [GUI.Table(
-    values=table_array,
-    headings=headings,
-    max_col_width=50,
-    auto_size_columns=True,
-    display_row_numbers=True,
-    justification='left',
-    num_rows=10,
-    enable_events = True,
-    key="-TABLE-",
-    row_height=35
-    )]
-]
 
-layout_picked_url = [
-    [GUI.Table(
-        values=c2table_array,
-        headings=headings,
-        max_col_width=50,
-        auto_size_columns=True,
-        display_row_numbers=True,
-        justification='left',
-        num_rows=10,
-        key="-PTABLE-",
-        enable_events = True,
-        row_height=35
-        )]
-]
+# Do the next job in the queue
+def work():
+    while True:
+        url = queue.get()
+        Spider.crawl(threading.current_thread().name, url)
+        queue.task_done()
 
-layout = [ 
-    [
-    GUI.Column(layout_url),
-    GUI.Button('Search',key='-SEARCH-'),
-    GUI.VSeparator(),
-    GUI.Column(layout_picked_url)
-    ]
 
-]
+# Each queued link is a new job
+def create_jobs():
+    for link in fileIntoSet(QUEUE_FILE):
+        if (link != "#context"):
+            queue.put(link)
+        print(link)
+    queue.join()
+    crawl()
 
-window = GUI.Window("Test",layout)
 
-while True:
-    # Initial window is a start button
-    event, values = window.read()
-    
-    
-    # This is the Exit button/window close event
-    if event == "EXIT" or event == GUI.WIN_CLOSED:
-        break
-    # This event will do the initial crawl
-    if event == "-START-":
-        # Initial first 10 database display
-        break;
-    if event =="-TABLE-":
-        # print("print 1: ",values[event][0])                                     # Printing index of column 1 link
-        # Pass in a new URL for crawling and overwrite the file
-        index = values[event][0]                                                  # setting index from values table 
-        # print("Print 2",table_array[index][0])                                  # Printing link from specified index of column 1
-        # new name. Probably the url
-        NAME = "selected_page"                          # Name of new directory
-        # New url here
-        HOME_PAGE = table_array[index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
-        DOMAIN_NAME = getDomainName(HOME_PAGE)          # Get domain name from selected URL
-        # print(DOMAIN_NAME)
-        # I think we should overwrite this file
-        QUEUE_FILE = NAME + "/queue.txt"
+# Check if there are items in the queue, if so crawl them
+def crawl():
+    queued_links = fileIntoSet(QUEUE_FILE)
+    if len(queued_links) > 0:
+        print(str(len(queued_links)) + ' links in the queue')
+        create_jobs()
 
-        # NUM_OF_THREADS = 8
-        queue = Queue()
-        Spider(NAME, HOME_PAGE, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
-        add_contained_urls(table_array[index][0],read_selected())   # Add new links to array at index of clicked link
-
-        # create table to read all values from contained urls
-        
-        with open('database.JSON','r') as file:
-            c2queue_array = []
-            c2column_links = []
-            c2dictionary = {}
-            c2dictionary = json.load(file)
-            # for index in range(len(dictionary['URL'])):
-            c2column_links = (c2dictionary['URL'][index][table_array[index][0]]['contained_urls']) #index of each contained_urls position in database.JSON
-
-            #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
-            for url in c2column_links:
-                # print(url)
-                # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
-                c2queue_array = []
-                c2queue_array.append(url)
-                c2table_array.append(c2queue_array)
-        
-                print(c2table_array)
-
-        # Pass URLs into second column gui from database
-        #window["-PTABLE-"].update(c2table_array)
-        #c2table_array = []
-            resultsList.create(c2table_array, headings)
- 
-        # Future: Check if selected url has contained urls in database -Eric
-        
-
-        # Update database function
-        #break;
-
-window.close()
-
+create_workers()
+crawl()
 
 
 

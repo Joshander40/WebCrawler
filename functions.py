@@ -6,7 +6,7 @@ def createDirectory(directory):
         print("The directory for " + directory + " was created")
         os.makedirs(directory)
 
-createDirectory("Starting Page")
+createDirectory("sbnation")
 
 ## Create a queue for file and crawled files if they do not exist
 def createFiles(name, startingURL):
@@ -24,7 +24,7 @@ def writeToFile(path, data):
     file.write(data)
     file.close()
 
-createFiles("Starting Page", "https://en.wikipedia.org/wiki/American_football/")
+createFiles("sbnation", "https://www.sbnation.com/college-football/")
 
 ## Add information to existing file
 
@@ -50,7 +50,7 @@ def fileIntoSet(name):
 def setIntoFile(URLS, file):
     deleteFileData(file)
     # print("========================================================================================================================\n")
-    for URL in URLS:
+    for URL in sorted(URLS):
         if URL is not None:
             addToFile(file, URL)
 
