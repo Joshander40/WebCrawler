@@ -73,7 +73,8 @@ class Spider:
         soup = BeautifulSoup(page.content,'lxml')
         words = str(soup.get_text(strip=True))
         words = words.lower()
-        words.count(searchKey)
+        keyWordsInFile = words.count(searchKey)
+        return keyWordsInFile
 
 
     def addToQueue(URLs):
