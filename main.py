@@ -103,9 +103,6 @@ while True:
     if event == "EXIT" or event == GUI.WIN_CLOSED:
         break
     # This event will do the initial crawl
-    if event == "-START-":
-        # Initial first 10 database display
-        break;
     if event =="-TABLE-":
         # print("print 1: ",values[event][0])                                     # Printing index of column 1 link
         # Pass in a new URL for crawling and overwrite the file
