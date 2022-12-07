@@ -79,7 +79,6 @@ def add_rank(parent_url,keyword,rank):
                 parent_dict['URL'][index][parent_url]['Keyword'].append(rank)
 
                 json.dump(parent_dict,append_json,indent=4)
-        
 
 def write_json(table_dict,file):
     with open(file,'w') as json_file:
@@ -88,6 +87,24 @@ def write_json(table_dict,file):
 def append_json(dictionary):
     with open('database.JSON','a') as json_file:
         json.dump(dictionary,json_file,indent=4)
+
+def check_contained(parent_url):
+    print("parent url ",parent_url)
+    parent_dict = {}
+    with open('database.JSON','r') as json_file_r:
+        url_dict = {parent_url: {'contained_urls' : []}}
+        parent_dict = json.load(json_file_r)
+    for index in range(len(parent_dict['URL'])):
+        if(parent_dict['URL'][index] == url_dict):
+            for elem in parent_dict['URL'][index][parent_url]['contained_urls']:
+                print(elem)
+                print("hello")
+
+            # if not (parent_dict['URL'][index][parent_url]['contained_urls']):
+            #     print("empty")
+            #     return True
+            # else:
+            #     return False
 
 create_database()
 create_rank_database()

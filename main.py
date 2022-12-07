@@ -108,7 +108,12 @@ while True:
         DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
         Spider("selected_page", URL, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
-        add_contained_urls(table_array[url_index][0],read_selected())   # Add new links to array at index of clicked link
+
+        check_contained(URL)
+        if(True):
+            print("adding contained")
+            add_contained_urls(table_array[url_index][0],read_selected())
+              # Add new links to array at index of clicked link
         with open('database.JSON','r') as file:
             c2column_links = []
             c2dictionary = {}
