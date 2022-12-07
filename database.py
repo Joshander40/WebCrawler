@@ -28,7 +28,7 @@ def create_dict():
     # print(queue_file)
     for elem in queue_file:
         rank = elem[-2:-1]
-        dictionary['URL'].append({elem[0:-2] : {rank:  {'contained_urls' : []}}})
+        dictionary['URL'].append({elem[0:-2] : {'contained_urls' : []}})
     write_json(dictionary)
     
 def add_contained_urls(parent_url,sub_urls):
