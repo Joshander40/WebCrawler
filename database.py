@@ -20,17 +20,23 @@ def read_selected():
         file.write("")
     return queue_file
 
-def create_dict():
+def create_database():
     dictionary = {'URL': []}
-
     queue_file = read_file()
     rank = "N/A"
     # print(queue_file)
     for elem in queue_file:
         rank = elem[-2:-1]
         dictionary['URL'].append({elem[0:-2] : {'contained_urls' : []}})
-    write_json(dictionary)
-    
+    write_json(dictionary,'database.JSON')
+
+def add_contained_parent_url(parent_url):
+    dictionary = {}
+    with open ('database.JSON','r') as file:
+        dictionary = json.load(file)
+        dictionary['URL'].append({parent_url : {'contained_urls' : []}})
+    append_json(dictionary)
+
 def add_contained_urls(parent_url,sub_urls):
     print("parent url ",parent_url)
     # print(len(sub_urls))
@@ -51,14 +57,25 @@ def add_contained_urls(parent_url,sub_urls):
                     # print(parent_dict)
                 # print(parent_dict)
                 json.dump(parent_dict,append_json,indent=4)
-        
+       
+def create_rank_database():
+    queue_file = read_file()
+    dictionary = {'URL': []}
+    rank_array = [{'Keyword': []}]
+    for elem in queue_file:
+        dictionary['URL'].append({elem[0:-2] : rank_array})
+    write_json(dictionary,'rank_database.JSON')
 
-def write_json(table_dict):
-    with open('database.JSON','w') as json_file:
+
+def write_json(table_dict,file):
+    with open(file,'w') as json_file:
         json.dump(table_dict,json_file,indent=4)
 
+def append_json(dictionary):
+    with open('database.JSON','a') as json_file:
+        json.dump(dictionary,json_file,indent=4)
 
-
-create_dict()
+create_database()
+create_rank_database()
 # sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
 # add_contained_urls("http://www.postingandtoasting.com/\n",sub_urls)
