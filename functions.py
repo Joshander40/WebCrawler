@@ -50,8 +50,11 @@ def fileIntoSet(name):
 def setIntoFile(URLS, file):
     deleteFileData(file)
     # print("========================================================================================================================\n")
-    for URL in sorted(URLS):
-        if URL is not None:
-            addToFile(file, URL)
+    try:
+        for URL in sorted(URLS):
+            if URL is not None:
+                addToFile(file, URL)
+    except:
+        print("Invaild")
 
 

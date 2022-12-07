@@ -42,9 +42,12 @@ class Spider:
             print("Queue " + str(len(Spider.queue)))
             print("Crawled " + str(len(Spider.crawled)))
             Spider.addToQueue(Spider.getLinks(URL))
-            Spider.queue.remove(URL)
-            Spider.crawled.add(URL)
-            Spider.updateFiles()
+            try:
+                Spider.queue.remove(URL)
+                Spider.crawled.add(URL)
+                Spider.updateFiles()
+            except:
+                print("invalid 1")
 
     # def getLinks(URL):
     #     htmlValue = ""
@@ -83,6 +86,7 @@ class Spider:
                 urls.append(Spider.startingUrl)
                 #print("9")
                 urls.append(link.get('href'))
+            print(urls)    
             return urls
         except:
              print("Error page can't be crawled "+ URL)
@@ -90,13 +94,17 @@ class Spider:
 
     def addToQueue(URLs):
         for url in URLs:
-            print("URL \n" + url + "URL\n")
+            #print("URL \n" + url + "URL\n")
             if url in Spider.queue:
                 continue
             if url in Spider.crawled:
                 continue
-            #if Spider.name not in url:
-            #    continue
+            try:
+                print("URL \n" + url + "URL\n")
+                if url != url.startswith("h"):
+                    continue
+            except:
+                print("invalid 2")
             Spider.queue.add(url)
 
     def updateFiles():

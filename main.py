@@ -21,7 +21,7 @@ import resultsList
 
 # this needs to be url and rank
 PROJECT_NAME = 'sbnation'
-HOMEPAGE = 'https://sbnation.com/college-football/'
+HOMEPAGE = 'https://www.sbnation.com/college-football/'
 DOMAIN_NAME = getDomainName(HOMEPAGE)
 QUEUE_FILE = PROJECT_NAME + '/queue.txt'
 CRAWLED_FILE = PROJECT_NAME + '/crawled.txt'
@@ -30,7 +30,7 @@ queue = Queue()
 Spider(PROJECT_NAME, HOMEPAGE, DOMAIN_NAME)
 
 
-# Create worker threads (will die when main exits)
+# # Create worker threads (will die when main exits)
 def create_workers():
     for _ in range(NUMBER_OF_THREADS):
         t = threading.Thread(target = work)
@@ -49,7 +49,7 @@ def work():
 # Each queued link is a new job
 def create_jobs():
     for link in fileIntoSet(QUEUE_FILE):
-        if (link != "#context"):
+        if (link != "#content"):
             queue.put(link)
         print(link)
     queue.join()
