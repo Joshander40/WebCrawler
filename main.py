@@ -124,7 +124,6 @@ while True:
         queue = Queue()
         Spider(NAME, HOME_PAGE, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
-
         add_contained_urls(table_array[index][0],read_selected())   # Add new links to array at index of clicked link
 
         # create table to read all values from contained urls
@@ -144,10 +143,13 @@ while True:
                 c2queue_array = []
                 c2queue_array.append(url)
                 c2table_array.append(c2queue_array)
-        print(c2table_array)
+        
+                print(c2table_array)
 
         # Pass URLs into second column gui from database
-        resultsList.create(c2table_array, headings)
+        #window["-PTABLE-"].update(c2table_array)
+        #c2table_array = []
+            resultsList.create(c2table_array, headings)
  
         # Future: Check if selected url has contained urls in database -Eric
         
