@@ -2,24 +2,7 @@
     "URL": [
         {
             "https://liverpooloffside.sbnation.com/ ": {
-                "contained_urls": [
-                    "http://www.sbnation.com/blog",
-                    "https://www.voxmedia.com/legal/cookie-polic",
-                    "http://www.sbnation.com/guide/disclosur",
-                    "https://www.voxmedia.co",
-                    "http://www.youtube.com/LiverpoolF",
-                    "https://status.voxmedia.co",
-                    "https://jobs.voxmedia.co",
-                    "http://blog.sbnation.co",
-                    "https://www.voxmedia.com/legal/terms-of-us",
-                    "https://www.voxmedia.com/legal/accessibilit",
-                    "https://www.voxmedia.com/legal/privacy-notic",
-                    "https://www.voxmedia.com/vox-advertisin",
-                    "https://www.voxmedia.com/pages/licensin",
-                    "https://www.facebook.com/pages/The-Liverpool-Offside/25323340332",
-                    "http://www.sbnation.com/pages/opening",
-                    "https://www.twitter.com/LFCOffsid"
-                ]
+                "contained_urls": []
             }
         },
         {

@@ -3,7 +3,7 @@ from queue import Queue
 from spider import Spider
 from domain import *
 from functions import *
-from database import create_dict,add_contained_urls,read_selected
+from database import *
 from gui import gui
 import json
 import PySimpleGUI as GUI
@@ -76,8 +76,8 @@ layout_picked_url = [
         display_row_numbers=True,
         justification='left',
         num_rows=10,
-        key="-PTABLE-",
         enable_events = True,
+        key="-TABLE-",
         row_height=35
         )]
 ]
@@ -85,74 +85,46 @@ layout_picked_url = [
 layout = [ 
     [
     GUI.Column(layout_url),
-    GUI.Button('Search',key='-SEARCH-'),
+    # GUI.Button('Search',key='-SEARCH-'),
     GUI.VSeparator(),
     GUI.Column(layout_picked_url)
     ]
 
 ]
 
-window = GUI.Window("Test",layout)
+window = GUI.Window("Football Web Crawler",layout)
 
 while True:
     # Initial window is a start button
-    event, values = window.read()
-    
-    
+    event, values = window.read()    
     # This is the Exit button/window close event
     if event == "EXIT" or event == GUI.WIN_CLOSED:
         break
-    # This event will do the initial crawl
+    # This event will do create a new window
     if event =="-TABLE-":
-        # print("print 1: ",values[event][0])                                     # Printing index of column 1 link
         # Pass in a new URL for crawling and overwrite the file
-        index = values[event][0]                                                  # setting index from values table 
-        # print("Print 2",table_array[index][0])                                  # Printing link from specified index of column 1
-        # new name. Probably the url
-        NAME = "selected_page"                          # Name of new directory
-        # New url here
-        HOME_PAGE = table_array[index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
-        DOMAIN_NAME = getDomainName(HOME_PAGE)          # Get domain name from selected URL
-        # print(DOMAIN_NAME)
-        # I think we should overwrite this file
-        QUEUE_FILE = NAME + "/queue.txt"
+        url_index = values[event][0]                                                  # setting index from values table   
+        URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
+        DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
+        Spider("selected_page", URL, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
-        # NUM_OF_THREADS = 8
-        queue = Queue()
-        Spider(NAME, HOME_PAGE, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
-
-        add_contained_urls(table_array[index][0],read_selected())   # Add new links to array at index of clicked link
-
-        # create table to read all values from contained urls
-        
+        add_contained_urls(table_array[url_index][0],read_selected())   # Add new links to array at index of clicked link
         with open('database.JSON','r') as file:
-            c2queue_array = []
             c2column_links = []
             c2dictionary = {}
             c2dictionary = json.load(file)
-            # for index in range(len(dictionary['URL'])):
-            c2column_links = (c2dictionary['URL'][index][table_array[index][0]]['contained_urls']) #index of each contained_urls position in database.JSON
+            c2column_links = (c2dictionary['URL'][url_index][table_array[url_index][0]]['contained_urls']) #index of each contained_urls position in database.JSON
 
             #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
             for url in c2column_links:
-                # print(url)
                 # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
                 c2queue_array = []
                 c2queue_array.append(url)
                 c2table_array.append(c2queue_array)
-        
-                print(c2table_array)
 
-        # Pass URLs into second column gui from database
-        #window["-PTABLE-"].update(c2table_array)
-        #c2table_array = []
             resultsList.create(c2table_array, headings)
  
         # Future: Check if selected url has contained urls in database -Eric
-        
-
-        # Update database function
-        #break;
 
 window.close()
 
@@ -175,3 +147,49 @@ window.close()
 
 
 
+# if event =="-PTABLE-":
+#         print("Hello World")
+#         # print("print 1: ",values[event][0])                                     # Printing index of column 1 link
+#         # Pass in a new URL for crawling and overwrite the file
+#         index = values[event][0]                                                  # setting index from values table 
+#         # print("Print 2",table_array[index][0])                                  # Printing link from specified index of column 1
+#         # new name. Probably the url
+#         NAME = "selected_page"                          # Name of new directory
+#         # New url here
+#         HOME_PAGE = table_array[index][0]              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
+#         DOMAIN_NAME = getDomainName(HOME_PAGE)          # Get domain name from selected URL
+#         # print(DOMAIN_NAME)
+#         # I think we should overwrite this file
+#         QUEUE_FILE = NAME + "/queue.txt"
+
+#         # NUM_OF_THREADS = 8
+#         queue = Queue()
+#         Spider(NAME, HOME_PAGE, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
+        
+#         add_contained_parent_url(HOME_PAGE)
+#         add_contained_urls(HOME_PAGE,read_selected())   # Add new links to array at index of clicked link
+    
+#         # create table to read all values from contained urls
+        
+#         with open('database.JSON','r') as file:
+#             c2queue_array = []
+#             c2column_links = []
+#             c2dictionary = {}
+#             c2dictionary = json.load(file)
+#             # for index in range(len(dictionary['URL'])):
+#             c2column_links = (c2dictionary['URL'][index][table_array[index][0]]['contained_urls']) #index of each contained_urls position in database.JSON
+
+#             #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
+#             for url in c2column_links:
+#                 # print(url)
+#                 # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
+#                 c2queue_array = []
+#                 c2queue_array.append(url)
+#                 c2table_array.append(c2queue_array)
+        
+#                 # print(c2table_array)
+
+#         # Pass URLs into second column gui from database
+#         #window["-PTABLE-"].update(c2table_array)
+#         #c2table_array = []
+#             resultsList.create(c2table_array, headings) 
