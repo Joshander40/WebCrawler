@@ -159,7 +159,7 @@ while True:
                 c2column_links = []
                 c2dictionary = {}
                 c2dictionary = json.load(file)
-                print(URL)
+                #print(URL)
                 c2column_links = (c2dictionary['URL'][url_index][URL]['contained_urls']) #index of each contained_urls position in database.JSON
 
                 #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]

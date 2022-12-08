@@ -115,7 +115,13 @@ def getDataBaseUrls():
         # for index in range(len(dictionary['URL'])):
         url_list = list(dictionary['URL'])
         # print(url_list)
+        c2dictionary = {}
+        c2dictionary = json.load(file)
+        
         for url_dict in url_list:
+            length = len(dictionary['URL'][url_dict][url]['contained_urls'])
+            print("\n\n\n\n\n\n\n\n\n\nlegth of stuff:------------------------------------------------")
+            print(length)
             for url in url_dict:
                 queue_array.append(url)
     print("the array ")
