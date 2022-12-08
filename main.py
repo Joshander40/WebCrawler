@@ -19,8 +19,42 @@ import resultsList
 # Display right side pane based on new array <<<<<<<<<<< Learn this
 
 
+queue = Queue()
+NUMBER_OF_THREADS = 8
 # this needs to be url and rank
-headings = ["URL"]
+def create_workers():
+    for _ in range(NUMBER_OF_THREADS):
+        t = threading.Thread(target = work)
+        t.daemon = True
+        t.start()
+
+# Do the next job in the queue
+def work():
+    while True:
+        url = queue.get()
+        Spider.crawl(threading.current_thread().name, url)
+        queue.task_done()
+
+# Each queued link is a new job
+def create_jobs():
+    for link in getDataBaseUrls():
+        queue.put(link)
+        #print(link)
+    queue.join()
+    crawl()
+
+
+# Check if there are items in the queue, if so crawl them
+def crawl():
+    if len(getDataBaseUrls()) > 0:
+        print(str(len(getDataBaseUrls())) + ' links in the queue')
+        create_jobs()
+
+# create_workers()
+# crawl()
+
+# this needs to be url and rank
+headings = [["URL"],["KeyWord"],["Rank"]]
 
 table_array = []
 c2table_array = []
@@ -28,11 +62,9 @@ with open('database.JSON','r') as file:
     queue_array = []
     dictionary = {}
     dictionary = json.load(file)
-    # for index in range(len(dictionary['URL'])):
     url_list = list(dictionary['URL'])
-    # print(url_list)
+
     for url_dict in url_list:
-        
         for url in url_dict:
             # print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
@@ -44,7 +76,16 @@ with open('database.JSON','r') as file:
             # 1. User to click one of the initial links and click crawl
             # 2. Crawl selected page for roughly 20 URLs
             # 3. Grab all data from each page and search each one for the keyword
-
+        with open('rank_database.JSON','r') as file:
+            r_dict = {}
+            r_dict = json.load(file)
+            for array in range(len(table_array)):
+                try:
+                    for k,v in r_dict['URL'][array][url][0]['Keyword'][0].items():
+                        table_array[array].append(k)
+                        table_array[array].append(v)
+                except:
+                    continue
     # Second Column using dictionary['contained_urls']
     # Does this need to be in the event tag? I think that makes if different every time the user chooses
 
@@ -56,9 +97,9 @@ layout_url = [
     [GUI.Table(
     values=table_array,
     headings=headings,
-    max_col_width=50,
-    auto_size_columns=True,
-    display_row_numbers=True,
+    max_col_width=200,
+    auto_size_columns=False,
+    display_row_numbers=False,
     justification='left',
     num_rows=10,
     enable_events = True,
@@ -86,8 +127,8 @@ layout = [
     [
     GUI.Column(layout_url),
     # GUI.Button('Search',key='-SEARCH-'),
-    GUI.VSeparator(),
-    GUI.Column(layout_picked_url)
+    # GUI.VSeparator(),
+    # GUI.Column(layout_picked_url)
     ]
 
 ]

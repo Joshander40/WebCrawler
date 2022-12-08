@@ -107,6 +107,25 @@ def check_contained(parent_url):
                 else: 
                     return False
 
+def getDataBaseUrls():
+    with open('database.JSON','r') as file:
+        dictionary = {}
+        queue_array = []
+        dictionary = json.load(file)
+        # for index in range(len(dictionary['URL'])):
+        url_list = list(dictionary['URL'])
+        # print(url_list)
+        for url_dict in url_list:
+            for url in url_dict:
+                queue_array.append(url)
+    print("the array ")
+    print(queue_array)
+    return queue_array
+
+
+
+
+
 # create_database()
 # create_rank_database()
 # sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
