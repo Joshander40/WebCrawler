@@ -123,9 +123,6 @@ def getDataBaseUrls():
     return queue_array
 
 
-
-
-
 # create_database()
 # create_rank_database()
 # sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
