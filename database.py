@@ -79,7 +79,6 @@ def add_rank(parent_url,keyword,rank):
                 parent_dict['URL'][index][parent_url]['Keyword'].append(rank)
 
                 json.dump(parent_dict,append_json,indent=4)
-        
 
 def write_json(table_dict,file):
     with open(file,'w') as json_file:
@@ -89,7 +88,42 @@ def append_json(dictionary):
     with open('database.JSON','a') as json_file:
         json.dump(dictionary,json_file,indent=4)
 
-create_database()
-create_rank_database()
+def check_contained(parent_url):
+    print("===================")
+    parent_dict = {}
+    with open('database.JSON','r') as json_file_r:
+        parent_dict = json.load(json_file_r)
+        
+    for index in range(len(parent_dict['URL'])):
+        # print(parent_dict['URL'][index])
+        for k,v in parent_dict['URL'][index].items():
+            # print(k)
+            if(k == parent_url):
+                arr = []
+                arr = parent_dict['URL'][index][parent_url]['contained_urls']
+                # print(len(arr))
+                if(len(arr)<=0):
+                    return True
+                else: 
+                    return False
+
+def getDataBaseUrls():
+    with open('database.JSON','r') as file:
+        dictionary = {}
+        queue_array = []
+        dictionary = json.load(file)
+        # for index in range(len(dictionary['URL'])):
+        url_list = list(dictionary['URL'])
+        # print(url_list)
+        for url_dict in url_list:
+            for url in url_dict:
+                queue_array.append(url)
+    print("the array ")
+    print(queue_array)
+    return queue_array
+
+
+# create_database()
+# create_rank_database()
 # sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
 # add_contained_urls("http://www.postingandtoasting.com/\n",sub_urls)
