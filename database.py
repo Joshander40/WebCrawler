@@ -126,6 +126,6 @@ def getDataBaseUrls():
 
 
 # create_database()
-create_rank_database()
+# create_rank_database()
 # sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
 # add_contained_urls("http://www.postingandtoasting.com/\n",sub_urls)

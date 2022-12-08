@@ -95,7 +95,7 @@ with open('database.JSON','r') as file:
             r_dict = json.load(file)
             for array in range(len(table_array)):
                 try:
-                    for k,v in r_dict['URL'][array][url][0]['Keyword'][0].items():
+                    for k,v in r_dict['URL'][array][url]['Keyword'][0].items():
                         table_array[array].append(k)
                         table_array[array].append(v)
                 except:
