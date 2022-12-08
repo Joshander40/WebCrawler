@@ -8,6 +8,9 @@ from gui import gui
 import json
 import PySimpleGUI as GUI
 import resultsList
+import requests
+import lxml 
+from bs4 import BeautifulSoup
 
 # Start gui <<<<<<<<<<<<<<<< I have a feeling we are going to want to run the gui in here and call different layout from the file?
 # ~"Create" database
@@ -17,10 +20,18 @@ import resultsList
 # Over write the file
 # Append to the dictionary <<<<<<<<<<<<<<<<< new method here
 # Display right side pane based on new array <<<<<<<<<<< Learn this
-
-
+#
+GUI.theme('LightBrown4')
 queue = Queue()
 NUMBER_OF_THREADS = 8
+
+def getWords(URL,searchKey):
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content,'lxml')
+    words = str(soup.get_text(strip=True))
+    words = words.lower()
+    return words.count(searchKey)
+
 # this needs to be url and rank
 def create_workers():
     for _ in range(NUMBER_OF_THREADS):
@@ -63,9 +74,12 @@ with open('database.JSON','r') as file:
     dictionary = {}
     dictionary = json.load(file)
     url_list = list(dictionary['URL'])
-
+    shhh_quiet = 0
     for url_dict in url_list:
         for url in url_dict:
+            shhh_quiet += 1
+            if(shhh_quiet > 10):
+                break
             # print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
             queue_array = []
@@ -97,14 +111,15 @@ layout_url = [
     [GUI.Table(
     values=table_array,
     headings=headings,
-    max_col_width=200,
+    max_col_width=100,
     auto_size_columns=False,
-    display_row_numbers=False,
-    justification='left',
+    display_row_numbers=True,
+    justification='middle',
     num_rows=10,
     enable_events = True,
     key="-TABLE-",
-    row_height=35
+    row_height=35,
+    col_widths= [50,50,50]
     )]
 ]
 
@@ -125,7 +140,9 @@ layout_picked_url = [
 
 layout = [ 
     [
-    GUI.Column(layout_url),
+    [GUI.Text("Enter search term:"), GUI.Input(key='-KEYWORD-', do_not_clear=True, size=(20,1))],    
+    [GUI.Button('-SUBMIT-')],
+    [GUI.Column(layout_url)],
     # GUI.Button('Search',key='-SEARCH-'),
     # GUI.VSeparator(),
     # GUI.Column(layout_picked_url)
@@ -136,13 +153,36 @@ layout = [
 window = GUI.Window("Football Web Crawler",layout)
 
 while True:
+    
     # Initial window is a start button
     event, values = window.read()    
     # This is the Exit button/window close event
     if event == "EXIT" or event == GUI.WIN_CLOSED:
         break
     # This event will do create a new window
+    if event =="-SUBMIT-":
+        keyword = values['-KEYWORD-']
+        with open('rank_database.JSON','r') as file: 
+            r_dict = {}
+            r_dict = json.load(file)
+            for index in range(len(r_dict['URL'])):
+                for k,v in r_dict['URL'][index].items():
+                    URL = k
+                    print("==============================",URL)
+                    DOMAIN_NAME = getDomainName(URL)
+                    try:
+                        word_count = getWords(URL,keyword)
+                    except: 
+                        word_count = 0
+                    print(word_count)
+                    add_rank(URL,keyword,word_count)
+                    window["-TABLE-"].update(table_array)
+
+                
+
+
     if event =="-TABLE-":
+       
         # Pass in a new URL for crawling and overwrite the file
         url_index = values[event][0]                                                  # setting index from values table   
         URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
@@ -194,7 +234,7 @@ while True:
         resultsList.create(c2table_array, headings)
  
         # Future: Check if selected url has contained urls in database -Eric
-
+    GUI.theme('I like potatoes')
 window.close()
 
 
