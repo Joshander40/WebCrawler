@@ -48,7 +48,7 @@ class Spider:
                 urlsTemp.append(link.get('href'))
             for url in urlsTemp:
                 try:
-                    if url.startswith("h"):
+                    if url != None and url.startswith("h"):
                         urlsMain.append(url)
                 except:
                     print("Error your mom")
