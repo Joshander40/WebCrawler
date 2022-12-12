@@ -14,12 +14,14 @@ class Spider:
     domainName = ""
     queue = set()
     crawled = set()
-    def __init__(self, name, startingUrl, domainName):
+    crawled1 = []
+    def __init__(self, name, startingUrl, domainName, crawled1):
         Spider.name = name
         Spider.qFile = Spider.name + "/queue.txt"
         # Spider.cFile = Spider.name + "/crawled.txt"
         Spider.startingUrl = startingUrl
         Spider.domainName = domainName
+        Spider.crawled1 = crawled1
         self.boot()
         self.crawl("Spider 1", Spider.startingUrl)
 
@@ -30,16 +32,21 @@ class Spider:
         Spider.queue = fileIntoSet(Spider.qFile)
         # Spider.crawled = fileIntoSet(Spider.cFile)
 
+#likly where checks to avoids duplicates should go
     @staticmethod
     def crawl(thread, URL):
         # if URL not in Spider.crawled:
+            
             print(thread + " current crawling " + URL)
-            print("Queue " + str(len(Spider.queue)))
+            #print("Queue " + str(len(Spider.queue)))
             # print("Crawled " + str(len(Spider.crawled)))
-            Spider.addToQueue(Spider.getLinks(URL))
-            Spider.queue.remove(URL)
-            Spider.crawled.add(URL)
-            Spider.updateFiles()
+            #Spider.addToQueue(Spider.getLinks(URL))
+            
+            Spider.crawled1 = Spider.getLinks(URL)
+            print("tester 4")
+            #Spider.queue.remove(URL)
+            #Spider.crawled.add(URL)
+            #Spider.updateFiles()
 
     # def getLinks(URL):
     #     htmlValue = ""
@@ -58,14 +65,17 @@ class Spider:
     
     # gets all urls on webpage
     def getLinks(URL):
+        print("Test 5")
         page = requests.get(URL)
+        print("Test 6")
     # ,'lxml'
         soup = BeautifulSoup(page.content,'lxml')
-        
+        print("URLS")
         urls = []
         for link in soup.find_all('a'):
             urls.append(Spider.startingUrl)
             urls.append(link.get('href'))
+        print(urls)
         return urls
     
     def getWords(URL,searchKey):
@@ -77,16 +87,16 @@ class Spider:
         
 
 
-    def addToQueue(URLs):
-        for url in URLs:
-            if url in Spider.queue:
-                continue
+    #def addToQueue(URLs):
+        #for url in URLs:
+            #if url in Spider.queue:
+            #    continue
             # if url in Spider.crawled:
             #     continue
-            Spider.queue.add(url)
+            #Spider.queue.add(url)
 
-    def updateFiles():
-        setIntoFile(Spider.queue, Spider.qFile)
+    #def updateFiles():
+        #setIntoFile(Spider.queue, Spider.qFile)
         # setIntoFile(Spider.crawled, Spider.cFile)
             
 
