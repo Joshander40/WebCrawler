@@ -11,6 +11,7 @@ import resultsList
 import requests
 import lxml 
 from bs4 import BeautifulSoup
+import time
 
 # Start gui <<<<<<<<<<<<<<<< I have a feeling we are going to want to run the gui in here and call different layout from the file?
 # ~"Create" database
@@ -22,9 +23,12 @@ from bs4 import BeautifulSoup
 # Display right side pane based on new array <<<<<<<<<<< Learn this
 #
 GUI.theme('LightBrown4')
-queue = Queue()
+queue = getDataBaseUrls()
 NUMBER_OF_THREADS = 8
+#print("current queue\n")
+#print(queue)
 
+time.sleep(5)
 def getWords(URL,searchKey):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content,'lxml')
@@ -41,28 +45,34 @@ def create_workers():
 
 # Do the next job in the queue
 def work():
-    while True:
-        url = queue.get()
-        Spider.crawl(threading.current_thread().name, url)
-        queue.task_done()
+    url = queue[0]
+    queue.pop(0)
+    Spider.crawl(threading.current_thread().name, url)
+    print("SPIDER\n")
+    print(Spider.crawled)
+    print("SPIDER\n\n")
+    add_contained_urls(url,Spider.crawled)
+    #queue.task_done()
+    
 
 # Each queued link is a new job
 def create_jobs():
-    for link in getDataBaseUrls():
-        queue.put(link)
-        #print(link)
-    queue.join()
+    #print(link)
+    #queue.join()
     crawl()
 
 
 # Check if there are items in the queue, if so crawl them
 def crawl():
-    if len(getDataBaseUrls()) > 0:
-        print(str(len(getDataBaseUrls())) + ' links in the queue')
+    if len(queue) > 0:
+        print("\n 11111111111")
+        #print(queue)
+        print("\n 11111111111\n")
         create_jobs()
 
-# create_workers()
-# crawl()
+for x in range(8):
+    create_workers()
+    crawl()
 
 # this needs to be url and rank
 headings = [["URL"],["KeyWord"],["Rank"]]

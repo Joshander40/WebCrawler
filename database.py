@@ -120,8 +120,8 @@ def getDataBaseUrls():
             for url in url_dict:
                 queue_array.append(url)
                 # length = len(dictionary['URL'][url_dict][url]['contained_urls'])
-    print("the array ")
-    print(queue_array)
+    #print("the array ")
+    #print(queue_array)
     return queue_array
 
 

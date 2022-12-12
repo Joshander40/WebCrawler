@@ -38,7 +38,7 @@ class Spider:
             # print("Crawled " + str(len(Spider.crawled)))
             Spider.addToQueue(Spider.getLinks(URL))
             Spider.queue.remove(URL)
-            # Spider.crawled.add(URL)
+            Spider.crawled.add(URL)
             Spider.updateFiles()
 
     # def getLinks(URL):
