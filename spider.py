@@ -41,13 +41,36 @@ class Spider:
             #print("Queue " + str(len(Spider.queue)))
             # print("Crawled " + str(len(Spider.crawled)))
             #Spider.addToQueue(Spider.getLinks(URL))
-            
+            tempValue = ""
+            print("\n\n\n\ntempValue")
+            print(tempValue)
+            tempValue = Spider.getLinks(URL)
+            print(tempValue)
+            print("tempValue2\n\n\n\n")
             Spider.crawled1 = Spider.getLinks(URL)
             print("tester 4")
             #Spider.queue.remove(URL)
             #Spider.crawled.add(URL)
             #Spider.updateFiles()
 
+    # gets all urls on webpage
+    def getLinks(URL):
+        return "buttocks"
+        print("Test 5")
+        try:
+            page = requests.get(URL)
+            print("Test 6")
+        # ,'lxml'
+            soup = BeautifulSoup(page.content,'lxml')
+            print("URLS")
+            urls = []
+            for link in soup.find_all('a'):
+                urls.append(Spider.startingUrl)
+                urls.append(link.get('href'))
+            print(urls)
+        except:
+            print("ERROR 404")
+        return "testerereres"    
     # def getLinks(URL):
     #     htmlValue = ""
     #     try:
@@ -64,7 +87,7 @@ class Spider:
     
     
     # gets all urls on webpage
-    def getLinks(URL):
+    #def getLinks(URL):
         print("Test 5")
         page = requests.get(URL)
         print("Test 6")
@@ -77,6 +100,8 @@ class Spider:
             urls.append(link.get('href'))
         print(urls)
         return urls
+
+    
     
     def getWords(URL,searchKey):
         page = requests.get(URL)

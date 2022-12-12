@@ -1,4 +1,5 @@
 import threading
+from threading import *
 from queue import Queue
 from spider import Spider
 from domain import *
@@ -27,8 +28,12 @@ queue = getDataBaseUrls()
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
 #print(queue)
+objSem = []
+for x in range(8):
+    objSem[x - 1] = Semaphore(1)
 
 time.sleep(5)
+
 def getWords(URL,searchKey):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content,'lxml')
@@ -38,8 +43,10 @@ def getWords(URL,searchKey):
 
 # this needs to be url and rank
 def create_workers():
-    for _ in range(NUMBER_OF_THREADS):
+    for x in range(NUMBER_OF_THREADS):
+        objSem[x].acquire()
         threaded = threading.Thread(target = work)
+        threaded.value = x
         threaded.daemon = True
         threaded.start()
 
@@ -50,7 +57,7 @@ def work():
     queue.pop(0)
     print("tester 2")
     print("\n......................\n")
-    print(threading.current_thread().name)
+    print(threading.current_thread().value)
     print("\n......................")
     Spider.crawl(threading.current_thread().name, url)
     print("tester 3")
@@ -58,6 +65,7 @@ def work():
     print(Spider.crawled1)
     print("SPIDER\n\n")
     add_contained_urls(url,Spider.crawled1)
+    objSem[x].release()
     #queue.task_done()
     
 
