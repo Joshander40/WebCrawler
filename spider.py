@@ -28,49 +28,50 @@ class Spider:
     @staticmethod
     def boot():
         createDirectory(Spider.name)
-        createFiles(Spider.name, Spider.startingUrl)
-        Spider.queue = fileIntoSet(Spider.qFile)
+        #createFiles(Spider.name, Spider.startingUrl)
+        #Spider.queue = fileIntoSet(Spider.qFile)
         # Spider.crawled = fileIntoSet(Spider.cFile)
-
-#likly where checks to avoids duplicates should go
-    @staticmethod
-    def crawl(thread, URL):
-        # if URL not in Spider.crawled:
-            
-            print(thread + " current crawling " + URL)
-            #print("Queue " + str(len(Spider.queue)))
-            # print("Crawled " + str(len(Spider.crawled)))
-            #Spider.addToQueue(Spider.getLinks(URL))
-            tempValue = ""
-            print("\n\n\n\ntempValue")
-            print(tempValue)
-            tempValue = Spider.getLinks(URL)
-            print(tempValue)
-            print("tempValue2\n\n\n\n")
-            Spider.crawled1 = Spider.getLinks(URL)
-            print("tester 4")
-            #Spider.queue.remove(URL)
-            #Spider.crawled.add(URL)
-            #Spider.updateFiles()
 
     # gets all urls on webpage
     def getLinks(URL):
-        return "buttocks"
         print("Test 5")
+        urls = []
         try:
-            page = requests.get(URL)
+            page = requests.get(URL,'lxml')
             print("Test 6")
         # ,'lxml'
             soup = BeautifulSoup(page.content,'lxml')
             print("URLS")
-            urls = []
             for link in soup.find_all('a'):
                 urls.append(Spider.startingUrl)
                 urls.append(link.get('href'))
             print(urls)
         except:
             print("ERROR 404")
-        return "testerereres"    
+        return urls 
+
+    #likly where checks to avoids duplicates should go
+    @staticmethod
+    def crawler(thread, URL):
+    # if URL not in Spider.crawled:
+        print(thread + " current crawling " + URL)
+        #print("Queue " + str(len(Spider.queue)))
+        # print("Crawled " + str(len(Spider.crawled)))
+        #Spider.addToQueue(Spider.getLinks(URL))
+        tempValue = ""
+        print("\n\n\n\ntempValue")
+        print(tempValue)
+        tempValue = Spider.getLinks(URL)
+        print(tempValue)
+        print("tempValue2\n\n\n\n")
+        Spider.crawled1 = Spider.getLinks(URL)
+        print("tester 4")
+        #Spider.queue.remove(URL)
+        #Spider.crawled.add(URL)
+        #Spider.updateFiles()
+
+      
+ 
     # def getLinks(URL):
     #     htmlValue = ""
     #     try:
