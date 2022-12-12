@@ -34,8 +34,9 @@ class Spider:
 
     # gets all urls on webpage
     def getLinks(URL):
-        print("Test 5")
-        urls = []
+        #print("Test 5")
+        urlsTemp = []
+        urlsMain = []
         try:
             page = requests.get(URL,'lxml')
             print("Test 6")
@@ -43,12 +44,15 @@ class Spider:
             soup = BeautifulSoup(page.content,'lxml')
             print("URLS")
             for link in soup.find_all('a'):
-                urls.append(Spider.startingUrl)
-                urls.append(link.get('href'))
-            print(urls)
+                urlsTemp.append(Spider.startingUrl)
+                urlsTemp.append(link.get('href'))
+            for url in urlsTemp:
+                if url.startswith("h"):
+                    urlsMain.append(url)
+            #print(urls)
         except:
             print("ERROR 404")
-        return urls 
+        return urlsMain 
 
     #likly where checks to avoids duplicates should go
     @staticmethod
@@ -58,11 +62,11 @@ class Spider:
         #print("Queue " + str(len(Spider.queue)))
         # print("Crawled " + str(len(Spider.crawled)))
         #Spider.addToQueue(Spider.getLinks(URL))
-        tempValue = ""
-        print("\n\n\n\ntempValue")
-        print(tempValue)
-        tempValue = Spider.getLinks(URL)
-        print(tempValue)
+        #tempValue = ""
+        #print("\n\n\n\ntempValue")
+        #print(tempValue)
+        #tempValue = Spider.getLinks(URL)
+        #print(tempValue)
         print("tempValue2\n\n\n\n")
         Spider.crawled1 = Spider.getLinks(URL)
         print("tester 4")
@@ -92,12 +96,12 @@ class Spider:
         print("Test 5")
         page = requests.get(URL)
         print("Test 6")
-    # ,'lxml'
         soup = BeautifulSoup(page.content,'lxml')
         print("URLS")
         urls = []
         for link in soup.find_all('a'):
             urls.append(Spider.startingUrl)
+
             urls.append(link.get('href'))
         print(urls)
         return urls

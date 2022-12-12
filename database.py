@@ -51,7 +51,7 @@ def add_contained_urls(parent_url,sub_urls):
             if(parent_dict['URL'][index] == url_dict):
                 # print("Hello World")
                 for url in sub_urls:
-                    #print(url[0:-2])
+                    # print(url[0:-2])
                     parent_dict['URL'][index][parent_url]['contained_urls'].append(url[0:-2])
                     # print(parent_dict['URL'][index][parent_url]['contained_urls'])
                     # print(parent_dict)

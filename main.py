@@ -51,17 +51,17 @@ def create_workers():
 # Do the next job in the queue
 def work():
     url = queue[0]
-    print("tester 1")
+    #print("tester 1")
     queue.pop(0)
-    print("tester 2")
-    print("\n......................\n")
-    print("\n number of stuff: ")
-    print(threading.current_thread().value) # possibly the number of the current thread
-    print("\n......................")
+    #print("tester 2")
+    #print("\n......................\n")
+    #print("\n number of stuff: ")
+    #print(threading.current_thread().value) # possibly the number of the current thread
+    #print("\n......................")
     Spider.crawler(threading.current_thread().name, url)
-    print("tester 3")
-    print("SPIDER\n")
-    print(Spider.crawled1)
+    #print("tester 3")
+    #print("SPIDER\n")
+    #print(Spider.crawled1)
     print("SPIDER\n\n")
     add_contained_urls(url,Spider.crawled1)
     objSem.release()
@@ -72,21 +72,21 @@ def work():
 #def create_jobs():
     #print(link)
     #queue.join()
-    crawl()
+    #crawl()
 
 
 # Check if there are items in the queue, if so crawl them
-def crawl():
-    if len(queue) > 0:
+#def crawl():
+    #if len(queue) > 0:
 #        print("\n 11111111111")
-        print("crawled1\n")
-        print(Spider.crawled1)
-#        print("\n 11111111111\n")
+        #print("crawled1\n")
+        #print(Spider.crawled1)
+        #print("\n 11111111111\n")
 #        create_jobs()
 
 for x in range(8):
     create_workers()
-    crawl()
+    #crawl()
 
 # this needs to be url and rank
 headings = [["URL"],["KeyWord"],["Rank"]]
