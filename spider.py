@@ -47,9 +47,12 @@ class Spider:
                 urlsTemp.append(Spider.startingUrl)
                 urlsTemp.append(link.get('href'))
             for url in urlsTemp:
-                if url.startswith("h"):
-                    urlsMain.append(url)
-            #print(urls)
+                try:
+                    if url.startswith("h"):
+                        urlsMain.append(url)
+                except:
+                    print("Error your mom")
+            print(urlsMain)
         except:
             print("ERROR 404")
         return urlsMain 
@@ -93,18 +96,18 @@ class Spider:
     
     # gets all urls on webpage
     #def getLinks(URL):
-        print("Test 5")
-        page = requests.get(URL)
-        print("Test 6")
-        soup = BeautifulSoup(page.content,'lxml')
-        print("URLS")
-        urls = []
-        for link in soup.find_all('a'):
-            urls.append(Spider.startingUrl)
+        #print("Test 5")
+        #page = requests.get(URL)
+        #print("Test 6")
+        #soup = BeautifulSoup(page.content,'lxml')
+        #print("URLS")
+        #urls = []
+        #or link in soup.find_all('a'):
+        #    urls.append(Spider.startingUrl)
 
-            urls.append(link.get('href'))
-        print(urls)
-        return urls
+        #    urls.append(link.get('href'))
+        #print(urls)
+        #return urls
 
     
     
