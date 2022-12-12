@@ -8,6 +8,7 @@ from gui import gui
 import json
 import PySimpleGUI as GUI
 import resultsList
+import operator
 
 # Start gui <<<<<<<<<<<<<<<< I have a feeling we are going to want to run the gui in here and call different layout from the file?
 # ~"Create" database
@@ -18,7 +19,7 @@ import resultsList
 # Append to the dictionary <<<<<<<<<<<<<<<<< new method here
 # Display right side pane based on new array <<<<<<<<<<< Learn this
 
-
+GUI.theme("LightBlue2")
 queue = Queue()
 NUMBER_OF_THREADS = 8
 # this needs to be url and rank
@@ -40,7 +41,7 @@ def create_jobs():
     for link in getDataBaseUrls():
         queue.put(link)
         #print(link)
-    queue.join()
+    # queue.join()
     crawl()
 
 
@@ -49,9 +50,26 @@ def crawl():
     if len(getDataBaseUrls()) > 0:
         print(str(len(getDataBaseUrls())) + ' links in the queue')
         create_jobs()
+# try:
+#     create_workers()
+#     crawl()
+# except:
+#     print("haha whoops")
 
-# create_workers()
-# crawl()
+# Method to sort table columns when you click a column header
+# def sort_table(table, cols):
+#     """ sort a table by multiple columns
+#         table: a list of lists (or tuple of tuples) where each inner list
+#                represents a row
+#         cols:  a list (or tuple) specifying the column numbers to sort by
+#                e.g. (1,0) would sort by column 1, then by column 0
+#     """
+#     for col in reversed(cols):
+#         try:
+#             table = sorted(table, key=operator.itemgetter(col))
+#         except Exception as e:
+#             GUI.popup_error('Error in sort_table', 'Exception in sort_table', e)
+#     return table
 
 # this needs to be url and rank
 headings = [["URL"],["KeyWord"],["Rank"]]
@@ -63,9 +81,13 @@ with open('database.JSON','r') as file:
     dictionary = {}
     dictionary = json.load(file)
     url_list = list(dictionary['URL'])
+    shhh_quiet = 0
 
     for url_dict in url_list:
         for url in url_dict:
+            shhh_quiet += 1
+            if(shhh_quiet > 10):
+                break
             # print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
             queue_array = []
@@ -97,14 +119,16 @@ layout_url = [
     [GUI.Table(
     values=table_array,
     headings=headings,
-    max_col_width=200,
+    max_col_width=35,
     auto_size_columns=False,
     display_row_numbers=False,
-    justification='left',
+    justification='center',
     num_rows=10,
+    enable_click_events = True,
     enable_events = True,
     key="-TABLE-",
-    row_height=35
+    row_height=35,
+    col_widths=[50,20,20]
     )]
 ]
 
@@ -125,7 +149,9 @@ layout_picked_url = [
 
 layout = [ 
     [
-    GUI.Column(layout_url),
+    [GUI.Text("Enter search term:"), GUI.Input(key='-KEYWORD-', do_not_clear=True, size=(20,1))],
+    [GUI.Button('-SUBMIT-')],
+    [GUI.Column(layout_url)]
     # GUI.Button('Search',key='-SEARCH-'),
     # GUI.VSeparator(),
     # GUI.Column(layout_picked_url)
@@ -142,6 +168,34 @@ while True:
     if event == "EXIT" or event == GUI.WIN_CLOSED:
         break
     # This event will do create a new window
+    # if isinstance(event, tuple):
+    #     # TABLE CLICKED Event has value in format ('-TABLE=', '+CLICKED+', (row,col))
+    #     if event[0] == '-TABLE-':
+    #         if event[2][0] == -1 and event[2][1] != -1:           # Header was clicked and wasn't the "row" column
+    #             col_num_clicked = event[2][1]
+    #             new_table = sort_table(table_array[1:][:],(col_num_clicked, 0))
+    #             window['-TABLE-'].update(new_table)
+    #             table_array = [table_array[0]] + new_table
+            # window['-CLICKED-'].update(f'{event[2][0]},{event[2][1]}')
+    if event =="-SUBMIT-":
+        keyword = values['-KEYWORD-']
+        print(keyword)
+        with open('rank_database.JSON','r') as file:
+            babu_frik = {}
+            babu_frik = json.load(file)
+            # url_index = values[event][0]                                                  # setting index from values table
+            for bababooey in range(len(babu_frik['URL'])):
+                for k,v in babu_frik['URL'][bababooey].items():
+                    URL = k                                                         # babu_frik['URL'][bababooey]
+                    #print(URL)
+                    print("==============================",URL)
+                    DOMAIN_NAME = getDomainName(URL)
+                    try:                                                            # ("selected_page", URL, DOMAIN_NAME)
+                        word_count = Spider.getWords(URL,keyword)
+                    except: 
+                        word_count = 0                       
+                    add_rank(URL, keyword, word_count)
+                    window['-TABLE-'].update(table_array)
     if event =="-TABLE-":
         # Pass in a new URL for crawling and overwrite the file
         url_index = values[event][0]                                                  # setting index from values table   

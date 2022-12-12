@@ -60,7 +60,7 @@ class Spider:
     def getLinks(URL):
         page = requests.get(URL)
     # ,'lxml'
-        soup = BeautifulSoup(page.content)
+        soup = BeautifulSoup(page.content, 'lxml')
         
         urls = []
         for link in soup.find_all('a'):
@@ -70,10 +70,11 @@ class Spider:
     
     def getWords(URL,searchKey):
         page = requests.get(URL)
-        soup = BeautifulSoup(page.content)
+        soup = BeautifulSoup(page.content, 'lxml')
         words = str(soup.get_text(strip=True))
         words = words.lower()
-        words.count(searchKey)
+        return words.count(searchKey.lower())
+        
 
 
     def addToQueue(URLs):
