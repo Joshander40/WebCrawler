@@ -138,7 +138,7 @@ def getDbURLS(file,get_parent_with_contained):
             dictionary = json.load(file)
             for index in range(len(dictionary['URL'])):
                 for k,v in dictionary['URL'][index].items():
-                    if(len(v)> 0):
+                    if(len(v) <= 0):
                         return_arr.append(k)
         return return_arr
 
@@ -148,7 +148,7 @@ def getDbURLS(file,get_parent_with_contained):
             dictionary = json.load(file)
             for index in range(len(dictionary['URL'])):
                 for k,v in dictionary['URL'][index].items():
-                    if(len(v)> 0):
+                    if(len(v) <= 0):
                         return_arr.append(k)
         return return_arr
 

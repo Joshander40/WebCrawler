@@ -24,9 +24,9 @@ import time
 # Display right side pane based on new array <<<<<<<<<<< Learn this
 #
 GUI.theme('LightBrown4')
-queue = getDataBaseUrls()
-runningQueue = getDataBaseUrls()
-rankQueue = getRankDataBaseUrls()  #Should be a get ranked database
+queue = getDbURLS("database.JSON", True)
+runningQueue = queue
+rankQueue = getDbURLS("rank_database.JSON", True)  #Should be a get ranked database
 startingRankTerms = ["football", "touchdown", "score", "safety", "tackle", "touchback", "quarterback", "reciever", "defense", "catch", "yards", "vikings", "packers", "commanders", "nfl", "touchback", "referee", "statium", "texas", "kicker"]
 rankDictionary = {}
 dictionary = {}
@@ -34,6 +34,7 @@ with open ("database.json",'r') as file:
     dictionary = json.load(file)
 with open ("rank_database.json",'r') as file:
     rankDictionary = json.load(file)
+print(queue)
 
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
