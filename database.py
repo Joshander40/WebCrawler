@@ -42,7 +42,6 @@ def add_contained_parent_url(dictionary,parent_url,file):
     return dictionary
 
 def add_contained_urls(parent_url,sub_urls):
-    print("parent url ",parent_url)
     # print(len(sub_urls))
     parent_dict = {}
     try:
@@ -219,6 +218,6 @@ def doesNotAlreadyExists(database, link):
     return True
 
 # create_database()
-# create_rank_database()
+create_rank_database()
 # sub_urls = ["http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n","http://www.postingandtoasting.com/\n"]
 # add_contained_urls("http://www.postingandtoasting.com/\n",sub_urls)
