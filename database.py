@@ -34,17 +34,12 @@ def create_database():
 #
 #
 
-
-
-def add_contained_parent_url(parent_url, tempFile):
-    dictionary = {}
-    with open (tempFile,'r') as file:
-        dictionary = json.load(file)
-        if tempFile == "database.json":
-            dictionary['URL'].append({parent_url : {'contained_urls' : []}})
-        else: 
-            dictionary['URL'].append({parent_url : {'Keyword' : []}})
-    write_json(dictionary, tempFile)
+def add_contained_parent_url(dictionary,parent_url,file):
+    if file == "database.json":
+        dictionary['URL'].append({parent_url : {'contained_urls' : []}})
+    else: 
+        dictionary['URL'].append({parent_url : {'Keyword' : []}})
+    write_json(dictionary, file)
 
 def add_contained_urls(parent_url,sub_urls):
     print("parent url ",parent_url)
