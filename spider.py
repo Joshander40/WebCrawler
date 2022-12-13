@@ -39,20 +39,23 @@ class Spider:
         urlsMain = []
         try:
             page = requests.get(URL,'lxml')
-            print("Test 6")
+            #print("Test 6")
         # ,'lxml'
             soup = BeautifulSoup(page.content,'lxml')
             print("URLS")
             for link in soup.find_all('a'):
-                urlsTemp.append(Spider.startingUrl)
-                urlsTemp.append(link.get('href'))
+                try:
+                    urlsTemp.append(Spider.startingUrl)
+                    urlsTemp.append(link.get('href'))
+                except:
+                    print("Error 66")
             for url in urlsTemp:
                 try:
                     if url != None and url.startswith("h"):
                         urlsMain.append(url)
                 except:
-                    print("Error your mom")
-            print(urlsMain)
+                    print("Error 77")
+            #print(urlsMain)
         except:
             print("ERROR 404")
         return urlsMain 
@@ -70,9 +73,9 @@ class Spider:
         #print(tempValue)
         #tempValue = Spider.getLinks(URL)
         #print(tempValue)
-        print("tempValue2\n\n\n\n")
+        #print("tempValue2\n\n\n\n")
         Spider.crawled1 = Spider.getLinks(URL)
-        print("tester 4")
+        #print("tester 4")
         #Spider.queue.remove(URL)
         #Spider.crawled.add(URL)
         #Spider.updateFiles()

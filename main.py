@@ -25,11 +25,12 @@ import time
 #
 GUI.theme('LightBrown4')
 queue = getDataBaseUrls()
+runningQueue = getDataBaseUrls()
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
 #print(queue)
 objSem = Semaphore(8)
-
+dbSem = Semaphore(1)
 time.sleep(5)
 
 def getWords(URL,searchKey):
@@ -62,8 +63,19 @@ def work():
     #print("tester 3")
     #print("SPIDER\n")
     #print(Spider.crawled1)
-    print("SPIDER\n\n")
+    #print("SPIDER\n\n")
+    dbSem.acquire()
     add_contained_urls(url,Spider.crawled1)
+    dbSem.release()
+    for link in Spider.crawled1:
+        if doesNotAlreadyExists(runningQueue, link):
+            runningQueue.append(link)
+            dbSem.acquire()
+            add_contained_parent_url(link)
+            dbSem.release()
+#    for link in Spider.crawled1:
+#        if(doesNotAlreadyExists(getDataBaseUrls(),link)):
+#            add_contained_parent_url(link)
     objSem.release()
     #queue.task_done()
     
@@ -84,7 +96,7 @@ def work():
         #print("\n 11111111111\n")
 #        create_jobs()
 
-for x in range(8):
+for x in range(200):
     create_workers()
     #crawl()
 

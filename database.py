@@ -41,22 +41,37 @@ def add_contained_urls(parent_url,sub_urls):
     print("parent url ",parent_url)
     # print(len(sub_urls))
     parent_dict = {}
-    with open('database.JSON','r') as json_file_r:
-        url_dict = {parent_url: {'contained_urls' : []}}
-        # print("url dict" , url_dict)
-        parent_dict = json.load(json_file_r)
-    with open('database.JSON','w') as append_json:
-        # print(len(parent_dict['URL']))
-        for index in range(len(parent_dict['URL'])):
-            if(parent_dict['URL'][index] == url_dict):
-                # print("Hello World")
-                for url in sub_urls:
-                    # print(url[0:-2])
-                    parent_dict['URL'][index][parent_url]['contained_urls'].append(url[0:-2])
-                    # print(parent_dict['URL'][index][parent_url]['contained_urls'])
-                    # print(parent_dict)
-                # print(parent_dict)
-                json.dump(parent_dict,append_json,indent=4)
+    try:
+        try:
+            with open('database.JSON','r') as json_file_r:
+                url_dict = {parent_url: {'contained_urls' : []}}
+                #print("url dict" , url_dict)
+                try:
+                    parent_dict = json.load(json_file_r)
+                except:
+                    print("Error 111")
+        except:
+            print("Error 777")
+        try:
+            with open('database.JSON','w') as append_json:
+                # print(len(parent_dict['URL']))
+                for index in range(len(parent_dict['URL'])):
+                    if(parent_dict['URL'][index] == url_dict):
+                        # print("Hello World")
+                        for url in sub_urls:
+                            # print(url[0:-2])
+                            try:
+                                parent_dict['URL'][index][parent_url]['contained_urls'].append(url[0:-2])
+                            except:
+                                print("Eeor 222")
+                            # print(parent_dict['URL'][index][parent_url]['contained_urls'])
+                            # print(parent_dict)
+                        # print(parent_dict)
+                        json.dump(parent_dict,append_json,indent=4)
+        except:
+            print("Error 888")
+    except:
+        print("Error 999")
        
 def create_rank_database():
     queue_file = read_file()
@@ -86,7 +101,7 @@ def write_json(table_dict,file):
         json.dump(table_dict,json_file,indent=4)
 
 def append_json(dictionary):
-    with open('database.JSON','a') as json_file:
+    with open('database.JSON','w') as json_file:
         json.dump(dictionary,json_file,indent=4)
 
 def check_contained(parent_url):
@@ -124,6 +139,11 @@ def getDataBaseUrls():
     #print(queue_array)
     return queue_array
 
+def doesNotAlreadyExists(database, link):
+    for x in database:
+        if x == link:
+            return False
+    return True
 
 # create_database()
 # create_rank_database()
