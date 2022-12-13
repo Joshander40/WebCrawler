@@ -127,6 +127,54 @@ def check_contained(parent_url):
                 else: 
                     return False
 
+
+
+def getDbURLS(file,get_parent_with_contained):
+    return_arr = []
+
+    if ((file == 'database.JSON') and (get_parent_with_contained == False)):
+        with open('database.JSON','r') as file:
+            dictionary = {}
+            dictionary = json.load(file)
+            for index in range(len(dictionary['URL'])):
+                for k,v in dictionary['URL'][index].items():
+                    if(len(v)> 0):
+                        return_arr.append(k)
+        return return_arr
+
+    elif ((file == 'rank_database.JSON') and (get_parent_with_contained == False)):
+        with open('rank_database.JSON','r') as file:
+            dictionary = {}
+            dictionary = json.load(file)
+            for index in range(len(dictionary['URL'])):
+                for k,v in dictionary['URL'][index].items():
+                    if(len(v)> 0):
+                        return_arr.append(k)
+        return return_arr
+
+    elif ((file == 'database.JSON') and (get_parent_with_contained == True)):
+        with open('database.JSON','r') as file:
+            dictionary = {}
+            dictionary = json.load(file)
+            url_list = list(dictionary['URL'])
+            for url_dict in url_list:
+                for url in url_dict:
+                    return_arr.append(url)
+        return return_arr
+
+    elif ((file == 'rank_database.JSON') and (get_parent_with_contained == True)):
+        with open('rank_database.JSON','r') as file:
+            dictionary = {}
+            dictionary = json.load(file)
+            url_list = list(dictionary['URL'])
+            # print(url_list)
+            for url_dict in url_list:
+                for url in url_dict:
+                    return_arr.append(url)
+        return return_arr
+    else:
+        print("Error in getDbURLS")
+
 def getDataBaseUrls():
     with open('database.JSON','r') as file:
         dictionary = {}
