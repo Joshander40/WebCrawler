@@ -39,7 +39,7 @@ def add_contained_parent_url(dictionary,parent_url,file):
         dictionary['URL'].append({parent_url : {'contained_urls' : []}})
     else: 
         dictionary['URL'].append({parent_url : {'Keyword' : []}})
-    write_json(dictionary, file)
+    return dictionary
 
 def add_contained_urls(parent_url,sub_urls):
     print("parent url ",parent_url)
