@@ -29,13 +29,22 @@ def create_database():
         rank = elem[-2:-1]
         dictionary['URL'].append({elem[0:-2] : {'contained_urls' : []}})
     write_json(dictionary,'database.JSON')
+#
+#Method for add parent url to ranked
+#
+#
 
-def add_contained_parent_url(parent_url):
+
+
+def add_contained_parent_url(parent_url, tempFile):
     dictionary = {}
-    with open ('database.JSON','r') as file:
+    with open (tempFile,'r') as file:
         dictionary = json.load(file)
-        dictionary['URL'].append({parent_url : {'contained_urls' : []}})
-    append_json(dictionary)
+        if tempFile == "database.json":
+            dictionary['URL'].append({parent_url : {'contained_urls' : []}})
+        else: 
+            dictionary['URL'].append({parent_url : {'Keyword' : []}})
+    write_json(dictionary, tempFile)
 
 def add_contained_urls(parent_url,sub_urls):
     print("parent url ",parent_url)
@@ -125,6 +134,22 @@ def check_contained(parent_url):
 
 def getDataBaseUrls():
     with open('database.JSON','r') as file:
+        dictionary = {}
+        queue_array = []
+        dictionary = json.load(file)
+        # for index in range(len(dictionary['URL'])):
+        url_list = list(dictionary['URL'])
+        # print(url_list)
+        for url_dict in url_list:
+            for url in url_dict:
+                queue_array.append(url)
+                # length = len(dictionary['URL'][url_dict][url]['contained_urls'])
+    #print("the array ")
+    #print(queue_array)
+    return queue_array
+
+def getRankDataBaseUrls():
+    with open('rank_database.JSON','r') as file:
         dictionary = {}
         queue_array = []
         dictionary = json.load(file)

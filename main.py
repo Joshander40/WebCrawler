@@ -26,13 +26,19 @@ import time
 GUI.theme('LightBrown4')
 queue = getDataBaseUrls()
 runningQueue = getDataBaseUrls()
+rankQueue = getRankDataBaseUrls()  #Should be a get ranked database
+startingRankTerms = ["football", "touchdown", "score", "safety", "tackle", "touchback", "quarterback", "reciever", "defense", "catch", "yards", "vikings", "packers", "commanders", "nfl", "touchback", "referee", "statium", "texas", "kicker"]
+dictionary = {}
+with open ("rank_database.json",'r') as file:
+    dictionary = json.load(file)
+
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
 #print(queue)
 objSem = Semaphore(8)
 dbSem = Semaphore(1)
 time.sleep(5)
-
+print(rankQueue)
 def getWords(URL,searchKey):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content,'lxml')
@@ -68,16 +74,39 @@ def work():
     add_contained_urls(url,Spider.crawled1)
     dbSem.release()
     for link in Spider.crawled1:
-        if doesNotAlreadyExists(runningQueue, link):
-            runningQueue.append(link)
-            dbSem.acquire()
-            add_contained_parent_url(link)
-            dbSem.release()
-#    for link in Spider.crawled1:
-#        if(doesNotAlreadyExists(getDataBaseUrls(),link)):
-#            add_contained_parent_url(link)
+        try:
+            if doesNotAlreadyExists(runningQueue, link):
+                runningQueue.append(link)
+                dbSem.acquire()
+                add_contained_parent_url(link, "database.json")
+                dbSem.release()
+        except:
+            print("Error on add parent")
     objSem.release()
     #queue.task_done()
+
+# this needs to be url and rank
+def createRankWorkers():
+    for x in range(NUMBER_OF_THREADS):
+        objSem.acquire()
+        threaded = threading.Thread(target = rankWorker)
+        threaded.value = x
+        threaded.daemon = True
+        threaded.start()
+
+# Do the next job in the queue
+def rankWorker():
+    term = startingRankTerms[0]
+    startingRankTerms.pop(0)
+    for url in rankQueue:
+        try:
+            word_count = getWords(url,keyword)
+        except: 
+            word_count = 0
+        #print(word_count)
+        dbSem.acquire()
+        add_rank(url,term,word_count)
+        dbSem.release()
     
 
 # Each queued link is a new job
@@ -96,8 +125,11 @@ def work():
         #print("\n 11111111111\n")
 #        create_jobs()
 
+# Uncommpent create_workers to populate/expand the dbs and 
+# Uncomment the createRankWorkers to update/ populate the rank_database
 for x in range(200):
-    create_workers()
+    createRankWorkers()
+    #create_workers()
     #crawl()
 
 # this needs to be url and rank
@@ -223,7 +255,7 @@ while True:
         url_index = values[event][0]                                                  # setting index from values table   
         URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
         DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
-        Spider("selected_page", URL, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
+        Spider("selected_page", URL, DOMAIN_NAME, None)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
 
         
