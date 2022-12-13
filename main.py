@@ -34,7 +34,7 @@ with open ("database.json",'r') as file:
     dictionary = json.load(file)
 with open ("rank_database.json",'r') as file:
     rankDictionary = json.load(file)
-print(queue[0])
+
 
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
@@ -42,7 +42,7 @@ NUMBER_OF_THREADS = 8
 objSem = Semaphore(8)
 dbSem = Semaphore(1)
 time.sleep(5)
-print(rankQueue)
+# print(rankQueue)
 def getWords(URL,searchKey):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content)
@@ -65,14 +65,14 @@ def work():
     queue.pop(0)
     Spider.crawler(threading.current_thread().name, url)
     dbSem.acquire()
-    add_contained_urls(url,Spider.crawled1)
+    dictionary["URL"][index][url]["contained_urls"].append(Spider.crawled1)
     dbSem.release()
     for link in Spider.crawled1:
         try:
             if doesNotAlreadyExists(runningQueue, link):
                 runningQueue.append(link)
-                dictionary['URL'].append({link : {'contained_urls' : []}})
-                rankDictionary['URL'].append({link : {'Keyword' : []}})
+                dictionary["URL"].append({link : {"contained_urls" : []}})
+                rankDictionary["URL"].append({link : {"Keyword" : []}})
                 #rankDictionary.update(add_contained_parent_url(rankDictionary, link, "database.json"))
         except:
             print("Error on add parent")
@@ -99,7 +99,15 @@ def rankWorker():
             word_count = 0
         #print(word_count)
         dbSem.acquire()
-        add_rank(url,term,word_count)
+        # add_rank(url,term,word_count)
+        for index in range(len(rankDictionary["URL"])):
+            # print(rankDictionary['URL'][index], "\n=================================================================================================================", "\n")
+            for k,v in rankDictionary["URL"][index].items():
+                if(k == url):
+                    # print("\nTerm: ",term,"\nCount: ",word_count)
+                    rank={term:word_count}
+                    rankDictionary["URL"][index][k]["Keyword"].append(rank)
+                    # print(rankDictionary['URL'][index][k]['Keyword'][0])
         dbSem.release()
     
 
@@ -123,14 +131,16 @@ def rankWorker():
 # Uncomment the createRankWorkers to update/ populate the rank_database
 for x in range(10):
     #createRankWorkers()
-    create_workers()
+    # create_workers()
     #crawl()
+    continue
 
+rankWorker()
 with open ("rank_database.json",'w') as file:
-    json.dump(rankDictionary, file)
+    json.dump(rankDictionary,file)
 
-with open ("database.json",'w') as file:
-    json.dump(dictionary,file)
+# with open ("database.json",'w') as file:
+#     json.dumps(dictionary,file)
 
 # this needs to be url and rank
 headings = [["URL"],["KeyWord"],["Rank"]]
@@ -163,7 +173,7 @@ with open('database.JSON','r') as file:
             r_dict = json.load(file)
             for array in range(len(table_array)):
                 try:
-                    for k,v in r_dict['URL'][array][url]['Keyword'][0].items():
+                    for k,v in r_dict["URL"][array][url]["Keyword"][0].items():
                         table_array[array].append(k)
                         table_array[array].append(v)
                 except:
@@ -230,21 +240,25 @@ while True:
     # This event will do create a new window
     if event =="-SUBMIT-":
         keyword = values['-KEYWORD-']
-        with open('rank_database.JSON','r') as file: 
-            r_dict = {}
-            r_dict = json.load(file)
-            for index in range(len(r_dict['URL'])):
-                for k,v in r_dict['URL'][index].items():
-                    URL = k
-                    print("==============================",URL)
-                    DOMAIN_NAME = getDomainName(URL)
-                    try:
-                        word_count = getWords(URL,keyword)
-                    except: 
-                        word_count = 0
-                    print(word_count)
-                    add_rank(URL,keyword,word_count)
-                    window["-TABLE-"].update(table_array)
+        for index in range(len(r_dict['URL'])):
+            for k,v in r_dict['URL'][index].items():
+                URL = k
+                # print("==============================",URL)
+                DOMAIN_NAME = getDomainName(URL)
+                try:
+                    word_count = getWords(URL,keyword)
+                except: 
+                    word_count = 0
+                print("\nkeyword: ",keyword, "\nWord Count: ",word_count)
+                rank1={keyword:word_count}
+               
+                rankDictionary["URL"][index][k]["Keyword"].append(rank1)
+                # old_keyword = table_array[1][x]
+                # new_keyword = old_keyword + "," + old_keyword
+                # table_array[1][x] = new_keyword
+                print(rankDictionary["URL"][index][k]["Keyword"])
+
+        window["-TABLE-"].update(table_array)
 
                 
 
