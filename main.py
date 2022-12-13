@@ -132,6 +132,9 @@ for x in range(200):
     #create_workers()
     #crawl()
 
+with open ("rank_database.json",'w') as file:
+    json.dump(dictionary,file)
+
 # this needs to be url and rank
 headings = [["URL"],["KeyWord"],["Rank"]]
 
