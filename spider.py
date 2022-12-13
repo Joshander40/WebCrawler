@@ -23,7 +23,7 @@ class Spider:
         Spider.domainName = domainName
         Spider.crawled1 = crawled1
         self.boot()
-        self.crawl("Spider 1", Spider.startingUrl)
+        self.crawler("Spider 1", Spider.startingUrl)
 
     @staticmethod
     def boot():

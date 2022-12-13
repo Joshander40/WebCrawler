@@ -13,6 +13,7 @@ import requests
 import lxml 
 from bs4 import BeautifulSoup
 import time
+import operator
 
 # Start gui <<<<<<<<<<<<<<<< I have a feeling we are going to want to run the gui in here and call different layout from the file?
 # ~"Create" database
@@ -96,9 +97,10 @@ def work():
         #print("\n 11111111111\n")
 #        create_jobs()
 
-for x in range(200):
-    create_workers()
-    #crawl()
+# for x in range(200):
+#     #create_workers()
+#     #crawl()
+#     print("hi")
 
 # this needs to be url and rank
 headings = [["URL"],["KeyWord"],["Rank"]]
@@ -153,6 +155,7 @@ layout_url = [
     justification='middle',
     num_rows=10,
     enable_events = True,
+    enable_click_events = True,
     key="-TABLE-",
     row_height=35,
     col_widths= [50,50,50]
@@ -186,7 +189,14 @@ layout = [
 
 ]
 
-window = GUI.Window("Football Web Crawler",layout)
+window = GUI.Window("Football Web Crawler",layout, resizable=True)
+
+def sort_table(table_array, col_num_clicked):
+    try:
+        table_data = sorted(table_array, key=operator.itemgetter(col_num_clicked), reverse=True)
+    except Exception as e:
+        GUI.popup_error('Error in sorting table','Error',e)
+    return table_data
 
 while True:
     
@@ -212,10 +222,16 @@ while True:
                         word_count = 0
                     print(word_count)
                     add_rank(URL,keyword,word_count)
+                    # add table update statement in GUI                 #window["-PTABLE-"].update(c2table_array)
                     window["-TABLE-"].update(table_array)
 
                 
 
+    if event[0] == '-TABLE-':
+        if event[2][0] == -1 and event[2][1] != -1:
+            col_num_clicked = event[2][1]
+            new_table_array = sort_table(table_array, col_num_clicked)
+            window['-TABLE-'].update(new_table_array)
 
     if event =="-TABLE-":
        
@@ -223,7 +239,7 @@ while True:
         url_index = values[event][0]                                                  # setting index from values table   
         URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
         DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
-        Spider("selected_page", URL, DOMAIN_NAME)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
+        Spider("selected_page", URL, DOMAIN_NAME, None)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
 
         
