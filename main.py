@@ -78,7 +78,7 @@ def work():
             if doesNotAlreadyExists(runningQueue, link):
                 runningQueue.append(link)
                 dbSem.acquire()
-                add_contained_parent_url(link, "database.json")
+                dictionary.update(add_contained_parent_url(dictionary,link, "database.json"))
                 dbSem.release()
         except:
             print("Error on add parent")
