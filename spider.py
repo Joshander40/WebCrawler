@@ -2,7 +2,7 @@ from urllib.request import urlopen
 from linkSearch import LinkSearcher
 from functions import *
 import requests
-import lxml 
+# import lxml 
 from bs4 import BeautifulSoup
 
 class Spider:
@@ -38,10 +38,10 @@ class Spider:
         urlsTemp = []
         urlsMain = []
         try:
-            page = requests.get(URL,'lxml')
+            page = requests.get(URL)
             #print("Test 6")
         # ,'lxml'
-            soup = BeautifulSoup(page.content,'lxml')
+            soup = BeautifulSoup(page.content)
             print("URLS")
             for link in soup.find_all('a'):
                 try:

@@ -138,18 +138,23 @@ def getDbURLS(file,get_parent_with_contained):
             dictionary = json.load(file)
             for index in range(len(dictionary['URL'])):
                 for k,v in dictionary['URL'][index].items():
-                    if(len(v) <= 0):
-                        return_arr.append(k)
+                    for k2,v2 in v.items():
+                        # print("\nK: ", k, "\nV: ",v2)
+                        if(len(v2) <= 0):
+                            return_arr.append(k)
         return return_arr
 
     elif ((file == 'rank_database.JSON') and (get_parent_with_contained == False)):
+        print("Hello World")
         with open('rank_database.JSON','r') as file:
             dictionary = {}
             dictionary = json.load(file)
             for index in range(len(dictionary['URL'])):
                 for k,v in dictionary['URL'][index].items():
-                    if(len(v) <= 0):
-                        return_arr.append(k)
+                    for k2,v2 in v.items():
+                        # print("\nK: ", k, "\nV: ",v2)
+                        if(len(v2) <= 0):
+                            return_arr.append(k)
         return return_arr
 
     elif ((file == 'database.JSON') and (get_parent_with_contained == True)):

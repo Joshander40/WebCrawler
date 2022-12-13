@@ -10,7 +10,7 @@ import json
 import PySimpleGUI as GUI
 import resultsList
 import requests
-import lxml 
+
 from bs4 import BeautifulSoup
 import time
 
@@ -24,7 +24,7 @@ import time
 # Display right side pane based on new array <<<<<<<<<<< Learn this
 #
 GUI.theme('LightBrown4')
-queue = getDbURLS("database.JSON", True)
+queue = getDbURLS("database.JSON", False)
 runningQueue = queue
 rankQueue = getDbURLS("rank_database.JSON", True)  #Should be a get ranked database
 startingRankTerms = ["football", "touchdown", "score", "safety", "tackle", "touchback", "quarterback", "reciever", "defense", "catch", "yards", "vikings", "packers", "commanders", "nfl", "touchback", "referee", "statium", "texas", "kicker"]
@@ -34,7 +34,7 @@ with open ("database.json",'r') as file:
     dictionary = json.load(file)
 with open ("rank_database.json",'r') as file:
     rankDictionary = json.load(file)
-print(queue)
+print(queue[0])
 
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
@@ -45,7 +45,7 @@ time.sleep(5)
 print(rankQueue)
 def getWords(URL,searchKey):
     page = requests.get(URL)
-    soup = BeautifulSoup(page.content,'lxml')
+    soup = BeautifulSoup(page.content)
     words = str(soup.get_text(strip=True))
     words = words.lower()
     return words.count(searchKey)
