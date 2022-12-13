@@ -10,6 +10,7 @@ import json
 import PySimpleGUI as GUI
 import resultsList
 import requests
+import operator
 
 from bs4 import BeautifulSoup
 import time
@@ -195,6 +196,7 @@ layout_url = [
     justification='middle',
     num_rows=10,
     enable_events = True,
+    enable_click_events = True,
     key="-TABLE-",
     row_height=35,
     col_widths= [50,50,50]
@@ -230,6 +232,13 @@ layout = [
 
 window = GUI.Window("Football Web Crawler",layout)
 
+def sort_table(table_array, col_num_clicked):
+    try:
+        table_data = sorted(table_array, key=operator.itemgetter(col_num_clicked), reverse=True)
+    except Exception as e:
+        GUI.popup_error('Error in sorting table','Error',e)
+    return table_data
+
 while True:
     
     # Initial window is a start button
@@ -259,9 +268,12 @@ while True:
                 print(rankDictionary["URL"][index][k]["Keyword"])
 
         window["-TABLE-"].update(table_array)
-
-                
-
+           
+    if event[0] == '-TABLE-':
+        if event[2][0] == -1 and event[2][1] != -1:
+            col_num_clicked = event[2][1]
+            new_table_array = sort_table(table_array, col_num_clicked)
+            window['-TABLE-'].update(new_table_array)
 
     if event =="-TABLE-":
        
