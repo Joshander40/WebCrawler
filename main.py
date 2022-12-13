@@ -28,9 +28,12 @@ queue = getDataBaseUrls()
 runningQueue = getDataBaseUrls()
 rankQueue = getRankDataBaseUrls()  #Should be a get ranked database
 startingRankTerms = ["football", "touchdown", "score", "safety", "tackle", "touchback", "quarterback", "reciever", "defense", "catch", "yards", "vikings", "packers", "commanders", "nfl", "touchback", "referee", "statium", "texas", "kicker"]
+rankDictionary = {}
 dictionary = {}
-with open ("rank_database.json",'r') as file:
+with open ("database.json",'r') as file:
     dictionary = json.load(file)
+with open ("rank_database.json",'r') as file:
+    rankDictionary = json.load(file)
 
 NUMBER_OF_THREADS = 8
 #print("current queue\n")
@@ -58,18 +61,8 @@ def create_workers():
 # Do the next job in the queue
 def work():
     url = queue[0]
-    #print("tester 1")
     queue.pop(0)
-    #print("tester 2")
-    #print("\n......................\n")
-    #print("\n number of stuff: ")
-    #print(threading.current_thread().value) # possibly the number of the current thread
-    #print("\n......................")
     Spider.crawler(threading.current_thread().name, url)
-    #print("tester 3")
-    #print("SPIDER\n")
-    #print(Spider.crawled1)
-    #print("SPIDER\n\n")
     dbSem.acquire()
     add_contained_urls(url,Spider.crawled1)
     dbSem.release()
@@ -77,13 +70,13 @@ def work():
         try:
             if doesNotAlreadyExists(runningQueue, link):
                 runningQueue.append(link)
-                dbSem.acquire()
-                dictionary.update(add_contained_parent_url(dictionary,link, "database.json"))
-                dbSem.release()
+                dictionary['URL'].append({link : {'contained_urls' : []}})
+                rankDictionary['URL'].append({link : {'Keyword' : []}})
+                #rankDictionary.update(add_contained_parent_url(rankDictionary, link, "database.json"))
         except:
             print("Error on add parent")
+        
     objSem.release()
-    #queue.task_done()
 
 # this needs to be url and rank
 def createRankWorkers():
@@ -127,12 +120,15 @@ def rankWorker():
 
 # Uncommpent create_workers to populate/expand the dbs and 
 # Uncomment the createRankWorkers to update/ populate the rank_database
-for x in range(200):
-    createRankWorkers()
-    #create_workers()
+for x in range(10):
+    #createRankWorkers()
+    create_workers()
     #crawl()
 
 with open ("rank_database.json",'w') as file:
+    json.dump(rankDictionary, file)
+
+with open ("database.json",'w') as file:
     json.dump(dictionary,file)
 
 # this needs to be url and rank
