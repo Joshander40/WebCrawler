@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from linkSearch import LinkSearcher
-from functions import *
+from domain import *
 import requests
 # import lxml 
 from bs4 import BeautifulSoup
@@ -22,27 +22,23 @@ class Spider:
         Spider.startingUrl = startingUrl
         Spider.domainName = domainName
         Spider.crawled1 = crawled1
-        self.boot()
+        #self.boot()
         self.crawler("Spider 1", Spider.startingUrl)
 
-    @staticmethod
-    def boot():
-        createDirectory(Spider.name)
+    #@staticmethod
+    #def boot():
+        #createDirectory(Spider.name)
         #createFiles(Spider.name, Spider.startingUrl)
         #Spider.queue = fileIntoSet(Spider.qFile)
         # Spider.crawled = fileIntoSet(Spider.cFile)
 
     # gets all urls on webpage
     def getLinks(URL):
-        #print("Test 5")
         urlsTemp = []
         urlsMain = []
         try:
-            page = requests.get(URL)
-            #print("Test 6")
-        # ,'lxml'
-            soup = BeautifulSoup(page.content)
-            print("URLS")
+            page = requests.get(URL, 'lxml')
+            soup = BeautifulSoup(page.content, 'lxml')
             for link in soup.find_all('a'):
                 try:
                     urlsTemp.append(Spider.startingUrl)
@@ -50,12 +46,20 @@ class Spider:
                 except:
                     print("Error 66")
             for url in urlsTemp:
+                #print(getSubDomainName(url))
+                if getSubDomainName(url) == "www.twitter.com":
+                    continue
+                if getSubDomainName(url) == "www.facebook.com":
+                    continue
+                if getSubDomainName(url) == "auth.voxmedia.com":
+                    continue
+                if getSubDomainName(url) == "twitter.com":
+                    continue
                 try:
                     if url != None and url.startswith("h"):
                         urlsMain.append(url)
                 except:
                     print("Error 77")
-            #print(urlsMain)
         except:
             print("ERROR 404")
         return urlsMain 
@@ -63,57 +67,9 @@ class Spider:
     #likly where checks to avoids duplicates should go
     @staticmethod
     def crawler(thread, URL):
-    # if URL not in Spider.crawled:
         print(thread + " current crawling " + URL)
-        #print("Queue " + str(len(Spider.queue)))
-        # print("Crawled " + str(len(Spider.crawled)))
-        #Spider.addToQueue(Spider.getLinks(URL))
-        #tempValue = ""
-        #print("\n\n\n\ntempValue")
-        #print(tempValue)
-        #tempValue = Spider.getLinks(URL)
-        #print(tempValue)
-        #print("tempValue2\n\n\n\n")
         Spider.crawled1 = Spider.getLinks(URL)
-        #print("tester 4")
-        #Spider.queue.remove(URL)
-        #Spider.crawled.add(URL)
-        #Spider.updateFiles()
 
-      
- 
-    # def getLinks(URL):
-    #     htmlValue = ""
-    #     try:
-    #         value = urlopen(URL)
-    #         if value.getHeader("Content-Type") == "text/html":
-    #             bytes = value.read()
-    #             htmlString = bytes.decode("utf-8")
-    #         searcher = LinkSearcher(Spider.startingUrl, URL)
-    #         searcher.feed(htmlString)
-    #     except:
-    #         print("Error page can't be crawled "+ URL)
-    #         return set()
-    #     return searcher.gatheredLinks()
-    
-    
-    # gets all urls on webpage
-    #def getLinks(URL):
-        #print("Test 5")
-        #page = requests.get(URL)
-        #print("Test 6")
-        #soup = BeautifulSoup(page.content,'lxml')
-        #print("URLS")
-        #urls = []
-        #or link in soup.find_all('a'):
-        #    urls.append(Spider.startingUrl)
-
-        #    urls.append(link.get('href'))
-        #print(urls)
-        #return urls
-
-    
-    
     def getWords(URL,searchKey):
         page = requests.get(URL)
         soup = BeautifulSoup(page.content,'lxml')
@@ -121,22 +77,3 @@ class Spider:
         words = words.lower()
         return words.count(searchKey)
         
-
-
-    #def addToQueue(URLs):
-        #for url in URLs:
-            #if url in Spider.queue:
-            #    continue
-            # if url in Spider.crawled:
-            #     continue
-            #Spider.queue.add(url)
-
-    #def updateFiles():
-        #setIntoFile(Spider.queue, Spider.qFile)
-        # setIntoFile(Spider.crawled, Spider.cFile)
-            
-
-
-
-
-

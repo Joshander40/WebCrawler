@@ -3,7 +3,6 @@ from threading import *
 from queue import Queue
 from spider import Spider
 from domain import *
-from functions import *
 from database import *
 from gui import gui
 import json
@@ -68,17 +67,19 @@ def work():
     queue.pop(0)
     Spider.crawler(threading.current_thread().name, url)
     dbSem.acquire()
-    dictionary["URL"][index][url]["contained_urls"].append(Spider.crawled1)
+    add_contained_urls(url,Spider.crawled1)   
     dbSem.release()
     for link in Spider.crawled1:
-        try:
-            if doesNotAlreadyExists(runningQueue, link):
-                runningQueue.append(link)
-                dictionary["URL"].append({link : {"contained_urls" : []}})
-                rankDictionary["URL"].append({link : {"Keyword" : []}})
-                #rankDictionary.update(add_contained_parent_url(rankDictionary, link, "database.json"))
-        except:
-            print("Error on add parent")
+        if doesNotAlreadyExists(runningQueue, link):
+            runningQueue.append(link)
+            dbSem.acquire()
+            add_contained_parent_url_main(link)
+            dbSem.release()
+            #runningQueue.append(link)
+            #dictionary["URL"].append({link : {"contained_urls" : []}})
+            #rankDictionary["URL"].append({link : {"Keyword" : []}})
+            #rankDictionary.update(add_contained_parent_url(rankDictionary, link, "database.json"))
+        
         
     objSem.release()
 
@@ -133,11 +134,13 @@ def rankWorker():
 # Uncommpent create_workers to populate/expand the dbs and 
 # Uncomment the createRankWorkers to update/ populate the rank_database
 for x in range(10):
+    if x > 4:
+        break
     #createRankWorkers()
-    # create_workers()
+    create_workers()
     #crawl()
-    continue
-
+    #continue
+time.sleep(10)
 rankWorker()
 with open ("rank_database.json",'w') as file:
     json.dump(rankDictionary,file)

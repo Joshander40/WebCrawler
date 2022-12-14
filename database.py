@@ -29,10 +29,13 @@ def create_database():
         rank = elem[-2:-1]
         dictionary['URL'].append({elem[0:-2] : {'contained_urls' : []}})
     write_json(dictionary,'database.JSON')
-#
-#Method for add parent url to ranked
-#
-#
+
+def add_contained_parent_url_main(parent_url):
+    dictionary = {}
+    with open ('database.JSON','r') as file:
+        dictionary = json.load(file)
+        dictionary['URL'].append({parent_url : {'contained_urls' : []}})
+    append_json(dictionary)
 
 def add_contained_parent_url(dictionary,parent_url,file):
     if file == "database.json":
