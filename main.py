@@ -11,7 +11,7 @@ import PySimpleGUI as GUI
 import resultsList
 import requests
 import operator
-
+import webbrowser
 from bs4 import BeautifulSoup
 import time
 
@@ -149,9 +149,7 @@ with open('database.JSON','r') as file:
     shhh_quiet = 0
     for url_dict in url_list:
         for url in url_dict:
-            shhh_quiet += 1
-            if(shhh_quiet > 100):
-                break
+            
             # print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
             queue_array = []
@@ -246,6 +244,7 @@ while True:
 
 
     if event =="-SUBMIT-":
+        new_arr = []
         keyword = values['-KEYWORD-']
         for index in range(len(r_dict['URL'])):
             for k,v in r_dict['URL'][index].items():
@@ -282,13 +281,13 @@ while True:
             new_table_array = sort_table(new_arr, col_num_clicked)
             window['-TABLE-'].update(new_table_array)
 
-    # if event =="-TABLE-":
+    if event =="-TABLE-":
        
-    #     # Pass in a new URL for crawling and overwrite the file
-    #     url_index = values[event][0]                                                  # setting index from values table   
-    #     URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
-    #     DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
-    #     Spider("selected_page", URL, DOMAIN_NAME, None)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
+        # Pass in a new URL for crawling and overwrite the file
+        url_index = values[event][0]                                                  # setting index from values table   
+        URL = table_array[url_index][0]              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
+        webbrowser.open(URL)
+         # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
 
         
