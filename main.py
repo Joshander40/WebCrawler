@@ -130,8 +130,8 @@ for x in range(10):
     continue
 
 # rankWorker()
-# with open ("rank_database.json",'w') as file:
-#     json.dump(rankDictionary,file)
+with open ("rank_database.json",'w') as file:
+    json.dump(rankDictionary,file)
 
 # with open ("database.json",'w') as file:
 #     json.dumps(dictionary,file)
@@ -150,7 +150,7 @@ with open('database.JSON','r') as file:
     for url_dict in url_list:
         for url in url_dict:
             shhh_quiet += 1
-            if(shhh_quiet > 10):
+            if(shhh_quiet > 100):
                 break
             # print(url)
             # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
@@ -223,7 +223,7 @@ layout = [
 
 ]
 
-window = GUI.Window("Football Web Crawler",layout)
+window = GUI.Window("Football Web Crawler",layout,resizable=True)
 
 def sort_table(table_array, col_num_clicked):
     try:
@@ -243,11 +243,7 @@ while True:
     if event == "EXIT" or event == GUI.WIN_CLOSED:
         break
     # This event will do create a new window
-    if event[0] == '-TABLE-':
-        if event[2][0] == -1 and event[2][1] != -1:
-            col_num_clicked = event[2][1]
-            new_table_array = sort_table(table_array, col_num_clicked)
-            window['-TABLE-'].update(new_table_array)
+
 
     if event =="-SUBMIT-":
         keyword = values['-KEYWORD-']
@@ -257,8 +253,11 @@ while True:
                 # print("==============================",URL)
                 DOMAIN_NAME = getDomainName(URL)
                 try:
+                    print("===========================================Attempting==============================================")
                     word_count = getWords(URL,keyword)
                 except: 
+                    print("===========================================Well We Tried==============================================")
+
                     word_count = 0
                 # print("\nkeyword: ",keyword, "\nWord Count: ",word_count)
                 rank1={keyword:word_count}
@@ -277,59 +276,63 @@ while True:
         window["-TABLE-"].update(new_arr)
 
                 
+    if event[0] == '-TABLE-':
+        if event[2][0] == -1 and event[2][1] != -1:
+            col_num_clicked = event[2][1]
+            new_table_array = sort_table(new_arr, col_num_clicked)
+            window['-TABLE-'].update(new_table_array)
 
-
-    if event =="-TABLE-":
+    # if event =="-TABLE-":
        
-        # Pass in a new URL for crawling and overwrite the file
-        url_index = values[event][0]                                                  # setting index from values table   
-        URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
-        DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
-        Spider("selected_page", URL, DOMAIN_NAME, None)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
+    #     # Pass in a new URL for crawling and overwrite the file
+    #     url_index = values[event][0]                                                  # setting index from values table   
+    #     URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
+    #     DOMAIN_NAME = getDomainName(URL)          # Get domain name from selected URL
+    #     Spider("selected_page", URL, DOMAIN_NAME, None)            # Pass this index to spider, new searched URL, based on results of crawl, make new file with URLs
 
 
         
-        if(check_contained(URL)):
-            c2table_array = []
-            print("adding contained")
-            add_contained_urls(table_array[url_index][0],read_selected())
-            with open('database.JSON','r') as file:
-                c2column_links = []
-                c2dictionary = {}
-                c2dictionary = json.load(file)
-                print(URL)
-                c2column_links = (c2dictionary['URL'][url_index][URL]['contained_urls']) #index of each contained_urls position in database.JSON
+    #     if(check_contained(URL)):
+    #         c2table_array = []
+    #         print("adding contained")
+    #         add_contained_urls(table_array[url_index][0],read_selected())
+    #         with open('database.JSON','r') as file:
+    #             c2column_links = []
+    #             c2dictionary = {}
+    #             c2dictionary = json.load(file)
+    #             print(URL)
+    #             c2column_links = (c2dictionary['URL'][url_index][URL]['contained_urls']) #index of each contained_urls position in database.JSON
 
-                #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
-                for url in c2column_links:
-                    # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
-                    c2queue_array = []
-                    c2queue_array.append(url)
-                    c2table_array.append(c2queue_array)
+    #             #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
+    #             for url in c2column_links:
+    #                 # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
+    #                 c2queue_array = []
+    #                 c2queue_array.append(url)
+    #                 c2table_array.append(c2queue_array)
             
 
               
-        else:
-            c2table_array = []
-              # Add new links to array at index of clicked link
-            with open('database.JSON','r') as file:
-                c2column_links = []
-                c2dictionary = {}
-                c2dictionary = json.load(file)
-                print(URL)
-                c2column_links = (c2dictionary['URL'][url_index][URL]['contained_urls']) #index of each contained_urls position in database.JSON
+    #     else:
+    #         c2table_array = []
+    #           # Add new links to array at index of clicked link
+    #         with open('database.JSON','r') as file:
+    #             c2column_links = []
+    #             c2dictionary = {}
+    #             c2dictionary = json.load(file)
+    #             print(URL)
+    #             c2column_links = (c2dictionary['URL'][url_index][URL]['contained_urls']) #index of each contained_urls position in database.JSON
                 
-                #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
-                for url in c2column_links:
-                    # print(url)
-                    # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
-                    c2queue_array = []
-                    c2queue_array.append(url)
-                    c2table_array.append(c2queue_array)
+    #             #group all links into bracketed array. [ [] [] [] [] [] [] ] not [[]]
+    #             for url in c2column_links:
+    #                 # print(url)
+    #                 # These 3 lines have to stay together. This is what creates a full list. List must = [ [] [] [] [] [] [] ] not [[]]
+    #                 c2queue_array = []
+    #                 c2queue_array.append(url)
+    #                 c2table_array.append(c2queue_array)
                     
-                # print(c2table_array)
-        print(len(c2table_array))
-        resultsList.create(c2table_array, headings)
+    #             # print(c2table_array)
+    #     print(len(c2table_array))
+    #     resultsList.create(c2table_array, headings)
  
         # Future: Check if selected url has contained urls in database -Eric
     GUI.theme('I like potatoes')
