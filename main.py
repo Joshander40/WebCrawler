@@ -101,40 +101,18 @@ def rankWorker():
             word_count = getWords(url,keyword)
         except: 
             word_count = 0
-        #print(word_count)
         dbSem.acquire()
-        # add_rank(url,term,word_count)
         for index in range(len(rankDictionary["URL"])):
-            # print(rankDictionary['URL'][index], "\n=================================================================================================================", "\n")
             for k,v in rankDictionary["URL"][index].items():
                 if(k == url):
-                    # print("\nTerm: ",term,"\nCount: ",word_count)
                     rank={term:word_count}
                     rankDictionary["URL"][index][k]["Keyword"].append(rank)
-                    # print(rankDictionary['URL'][index][k]['Keyword'][0])
         dbSem.release()
-    
-
-# Each queued link is a new job
-#def create_jobs():
-    #print(link)
-    #queue.join()
-    #crawl()
-
-
-# Check if there are items in the queue, if so crawl them
-#def crawl():
-    #if len(queue) > 0:
-#        print("\n 11111111111")
-        #print("crawled1\n")
-        #print(Spider.crawled1)
-        #print("\n 11111111111\n")
-#        create_jobs()
 
 # Uncommpent create_workers to populate/expand the dbs and 
 # Uncomment the createRankWorkers to update/ populate the rank_database
-for x in range(10):
-    if x > 4:
+for x in range(1000):
+    if x > 4:   #Change what x must be greater then to increase crawler depth
         break
     #createRankWorkers()
     create_workers()
