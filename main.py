@@ -11,7 +11,7 @@ import resultsList
 import requests
 import operator
 import webbrowser
-
+import lxml
 from bs4 import BeautifulSoup
 import time
 
@@ -46,8 +46,8 @@ dbSem = Semaphore(1)
 time.sleep(5)
 # print(rankQueue)
 def getWords(URL,searchKey):
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.content)
+    page = requests.get(URL, "lxml")
+    soup = BeautifulSoup(page.content, "lxml")
     words = str(soup.get_text(strip=True))
     words = words.lower()
     return words.count(searchKey)
@@ -112,14 +112,14 @@ def rankWorker():
 # Uncommpent create_workers to populate/expand the dbs and 
 # Uncomment the createRankWorkers to update/ populate the rank_database
 for x in range(1000):
-    if x > 4:   #Change what x must be greater then to increase crawler depth
+    if x > 1:   #Change what x must be greater then to increase crawler depth
         break
     #createRankWorkers()
     create_workers()
     #crawl()
     #continue
-time.sleep(10)
-rankWorker()
+time.sleep(15)
+#rankWorker()
 with open ("rank_database.json",'w') as file:
     json.dump(rankDictionary,file)
 
@@ -179,10 +179,10 @@ layout_url = [
     justification='middle',
     num_rows=10,
     enable_events = True,
-    enable_click_events = True,
     key="-TABLE-",
     row_height=35,
-    col_widths= [50,50,50]
+    col_widths= [50,50,50],
+    enable_click_events = True
     )]
 ]
 
@@ -213,7 +213,7 @@ layout = [
 
 ]
 
-window = GUI.Window("Football Web Crawler",layout)
+window = GUI.Window("Sports Web Crawler",layout, resizable=True)
 
 def sort_table(table_array, col_num_clicked):
     try:
@@ -221,6 +221,8 @@ def sort_table(table_array, col_num_clicked):
     except Exception as e:
         GUI.popup_error('Error in sorting table','Error',e)
     return table_data
+
+new_arr = []
 
 while True:
     
@@ -235,32 +237,39 @@ while True:
         for index in range(len(r_dict['URL'])):
             for k,v in r_dict['URL'][index].items():
                 URL = k
-                # print("==============================",URL)
+                
                 DOMAIN_NAME = getDomainName(URL)
                 try:
+                    print("==============================",URL)
                     word_count = getWords(URL,keyword)
+                    print(word_count)
                 except: 
                     word_count = 0
-                print("\nkeyword: ",keyword, "\nWord Count: ",word_count)
+                # print("\nkeyword: ",keyword, "\nWord Count: ",word_count)
                 rank1={keyword:word_count}
                
                 rankDictionary["URL"][index][k]["Keyword"].append(rank1)
                 # old_keyword = table_array[1][x]
                 # new_keyword = old_keyword + "," + old_keyword
                 # table_array[1][x] = new_keyword
-                print(rankDictionary["URL"][index][k]["Keyword"])
+                # print(rankDictionary["URL"][index][k]["Keyword"])
+                temp_arr = []
+                temp_arr.append(URL)
+                temp_arr.append(keyword)
+                temp_arr.append(word_count)
+                new_arr.append(temp_arr)
 
-        window["-TABLE-"].update(table_array)
+        window["-TABLE-"].update(new_arr)
            
     if event[0] == '-TABLE-':
         if event[2][0] == -1 and event[2][1] != -1:
             col_num_clicked = event[2][1]
-            new_table_array = sort_table(table_array, col_num_clicked)
+            new_table_array = sort_table(new_arr, col_num_clicked)
             window['-TABLE-'].update(new_table_array)
 
     if event =="-TABLE-":
         url_index = values[event][0]                                                  # setting index from values table   
-        URL = table_array[url_index][0];              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
+        URL = table_array[url_index][0]              # this will be the user's selected URL (EX: https://www.sbnation.com/college-football/)
         webbrowser.open(URL, new=2)
     # if event =="-TABLE-":
        
@@ -315,7 +324,7 @@ while True:
     #     resultsList.create(c2table_array, headings)
  
         # Future: Check if selected url has contained urls in database -Eric
-    GUI.theme('I like potatoes')
+    GUI.theme('Potato')
 window.close()
 
 

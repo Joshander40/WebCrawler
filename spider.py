@@ -2,7 +2,7 @@ from urllib.request import urlopen
 from linkSearch import LinkSearcher
 from domain import *
 import requests
-# import lxml 
+import lxml 
 from bs4 import BeautifulSoup
 
 class Spider:
@@ -54,6 +54,8 @@ class Spider:
                 if getSubDomainName(url) == "auth.voxmedia.com":
                     continue
                 if getSubDomainName(url) == "twitter.com":
+                    continue
+                if getSubDomainName(url) == "www.youtube.com":
                     continue
                 try:
                     if url != None and url.startswith("h"):

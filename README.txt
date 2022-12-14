@@ -9,4 +9,4 @@ You can then click on any link to open the website or enter a search term to hav
 When you are done using the program click the X at the top right to terminate it
 
 
-If you want to create new databases use create_database() and create_rank_database() respectivly
+If you want to create new databases use create_database() and create_rank_database() respectivly in the database.py file at the bottom
